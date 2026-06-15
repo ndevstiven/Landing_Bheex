@@ -5,103 +5,53 @@ const { t } = Astro.props;
 const { hero } = t;
 ---
 <section class="hero" aria-labelledby="hero-heading">
-  <!-- Hex geometry -->
-  <div class="hero__geo" aria-hidden="true">
-    <svg class="hex-ring r1" viewBox="0 0 400 460" fill="none"><polygon points="200,4 396,104 396,304 200,404 4,304 4,104" stroke="#F67029" stroke-width="1.2" stroke-opacity="0.14"/></svg>
-    <svg class="hex-ring r2" viewBox="0 0 280 322" fill="none"><polygon points="140,4 276,76 276,220 140,292 4,220 4,76" stroke="#F67029" stroke-width="0.8" stroke-opacity="0.09"/></svg>
-    <svg class="hex-ring r3" viewBox="0 0 160 184" fill="none"><polygon points="80,4 156,44 156,124 80,164 4,124 4,44" stroke="#F67029" stroke-width="0.6" stroke-opacity="0.2"/></svg>
-    <div class="hex-x-mark" aria-hidden="true">
-      <svg viewBox="0 0 32 32" fill="none"><line x1="3" y1="3" x2="29" y2="29" stroke="#F67029" stroke-width="2" stroke-opacity="0.5"/><line x1="29" y1="3" x2="3" y2="29" stroke="#F67029" stroke-width="2" stroke-opacity="0.5"/></svg>
-    </div>
-  </div>
-
-  <!-- Brand corner accents -->
-  <div class="corner tr" aria-hidden="true"></div>
-
   <div class="container hero__inner">
-    <div class="hero__copy">
-      <p class="eyebrow" data-i18n="hero.eyebrow">{hero.eyebrow}</p>
-      <h1 id="hero-heading">
-        <span class="hero__static" data-i18n="hero.headlineStatic">{hero.headlineStatic}</span>
-        <span class="hero__typewriter" aria-live="polite">
-          <span class="hero__typewriter-text" id="tw-text">{hero.typewriterPhrases[0]}</span>
-          <span class="hero__cursor" aria-hidden="true">|</span>
-        </span>
-      </h1>
+    <!-- Top meta line -->
+    <header class="hero__meta">
+      <span class="eyebrow" data-i18n="hero.eyebrow">{hero.eyebrow}</span>
+      <span class="hero__meta-line" data-i18n="hero.metaLine">{hero.metaLine}</span>
+    </header>
+
+    <!-- Editorial XL headline -->
+    <h1 id="hero-heading" class="hero__h1">
+      <span class="h1__line" data-i18n="hero.headlinePre">{hero.headlinePre}</span>
+      <span class="h1__line h1__line--em" data-i18n="hero.headlineEm">{hero.headlineEm}</span>
+      <span class="h1__line" data-i18n="hero.headlinePost">{hero.headlinePost}</span>
+    </h1>
+
+    <!-- Sub + actions in editorial 2-col -->
+    <div class="hero__bottom">
       <p class="hero__sub" data-i18n="hero.sub">{hero.sub}</p>
       <div class="hero__actions">
         <a href="#contacto" class="btn btn--primary" data-i18n="hero.ctaPrimary">{hero.ctaPrimary}</a>
-        <a href="#como-funciona" class="btn btn--ghost" data-i18n="hero.ctaSecondary">{hero.ctaSecondary}</a>
+        <a href="#proceso" class="btn btn--ghost" data-i18n="hero.ctaSecondary">
+          {hero.ctaSecondary}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
       </div>
     </div>
 
-    <div class="hero__visual" aria-hidden="true">
-      <div class="agent-stack">
-        <div class="agent-card ac--support">
-          <div class="ac__icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          </div>
-          <div class="ac__info">
-            <p class="ac__name" data-i18n="hero.agentLabels.support">{hero.agentLabels.support}</p>
-            <p class="ac__status"><span class="dot"></span><span data-i18n="hero.agentLabels.supportStatus">{hero.agentLabels.supportStatus}</span></p>
-          </div>
-          <span class="ac__badge" data-i18n="hero.agentLabels.live">{hero.agentLabels.live}</span>
-        </div>
-        <div class="agent-card ac--sales">
-          <div class="ac__icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-          </div>
-          <div class="ac__info">
-            <p class="ac__name" data-i18n="hero.agentLabels.sales">{hero.agentLabels.sales}</p>
-            <p class="ac__status"><span class="dot"></span><span data-i18n="hero.agentLabels.salesStatus">{hero.agentLabels.salesStatus}</span></p>
-          </div>
-          <span class="ac__badge" data-i18n="hero.agentLabels.active">{hero.agentLabels.active}</span>
-        </div>
-        <div class="agent-card ac--marketing">
-          <div class="ac__icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-          </div>
-          <div class="ac__info">
-            <p class="ac__name" data-i18n="hero.agentLabels.marketing">{hero.agentLabels.marketing}</p>
-            <p class="ac__status"><span class="dot"></span><span data-i18n="hero.agentLabels.marketingStatus">{hero.agentLabels.marketingStatus}</span></p>
-          </div>
-          <span class="ac__badge" data-i18n="hero.agentLabels.active">{hero.agentLabels.active}</span>
-        </div>
+    <!-- Telemetry strip — editorial production specs -->
+    <div class="hero__telemetry">
+      <div class="tel__item">
+        <span class="tel__label mono" data-i18n="hero.stackBadge.models">{hero.stackBadge.models}</span>
+        <span class="tel__value" data-i18n="hero.stackBadge.models_v">{hero.stackBadge.models_v}</span>
+      </div>
+      <div class="tel__item">
+        <span class="tel__label mono" data-i18n="hero.stackBadge.latency">{hero.stackBadge.latency}</span>
+        <span class="tel__value" data-i18n="hero.stackBadge.latency_v">{hero.stackBadge.latency_v}</span>
+      </div>
+      <div class="tel__item">
+        <span class="tel__label mono" data-i18n="hero.stackBadge.uptime">{hero.stackBadge.uptime}</span>
+        <span class="tel__value" data-i18n="hero.stackBadge.uptime_v">{hero.stackBadge.uptime_v}</span>
+      </div>
+      <div class="tel__item tel__item--live">
+        <span class="tel__dot" aria-hidden="true"></span>
+        <span class="tel__live mono" data-i18n="hero.arch.liveLabel">{hero.arch.liveLabel}</span>
       </div>
     </div>
-  </div>
-
-  <!-- Scroll indicator -->
-  <div class="hero__scroll" aria-hidden="true">
-    <div class="scroll-line"></div>
   </div>
 </section>
-
-<!-- Typewriter — both language sets passed, picks at runtime -->
-<script define:vars={{ phrasesEs: hero.typewriterPhrases, phrasesEn: ['Agents execute.', 'Support never stops.', 'Sales scale up.', 'Marketing automates.'] }}>
-(function() {
-  const el = document.getElementById('tw-text');
-  if (!el) return;
-
-  const isEn = (navigator.language || 'es').toLowerCase().startsWith('en');
-  const phrases = isEn ? phrasesEn : phrasesEs;
-
-  let pi = 0, ci = 0, deleting = false;
-
-  function tick() {
-    const phrase = phrases[pi];
-    if (!deleting) {
-      el.textContent = phrase.slice(0, ++ci);
-      if (ci === phrase.length) { deleting = true; return setTimeout(tick, 2200); }
-    } else {
-      el.textContent = phrase.slice(0, --ci);
-      if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; return setTimeout(tick, 300); }
-    }
-    setTimeout(tick, deleting ? 38 : 62);
-  }
-  setTimeout(tick, 1200);
-})();
-</script>
 
 <style>
 .hero {
@@ -110,243 +60,169 @@ const { hero } = t;
   flex-direction: column;
   justify-content: center;
   padding-top: calc(80px + var(--sp-8));
-  padding-bottom: var(--sp-8);
+  padding-bottom: var(--sp-10);
   position: relative;
   overflow: hidden;
   background: var(--c-bg);
 }
 
-/* Hex geometry */
-.hero__geo {
-  position: absolute;
-  right: -60px; top: 50%;
-  transform: translateY(-48%);
-  width: 480px; height: 520px;
-  pointer-events: none;
-}
-.hex-ring {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-}
-.r1 { width: 420px; height: 460px; animation: spin 80s linear infinite; }
-.r2 { width: 300px; height: 330px; animation: spin 55s linear infinite reverse; }
-.r3 { width: 180px; height: 200px; animation: spin 35s linear infinite; }
-.hex-x-mark {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40px; height: 40px;
-  animation: pulse 3s ease-in-out infinite;
-}
-@keyframes spin {
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-@keyframes pulse {
-  0%, 100% { opacity: 0.35; }
-  50% { opacity: 1; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hex-ring, .hex-x-mark { animation: none; }
-}
-
-/* Corner accent */
-.corner {
-  position: absolute;
-  width: 5px;
-  background: var(--c-brand);
-}
-.corner.tr {
-  top: 0; right: 0;
-  width: 140px; height: 4px;
-}
-.corner.tr::after {
+/* Faint hex watermark */
+.hero::before {
   content: '';
   position: absolute;
-  right: 0; top: 0;
-  width: 4px; height: 140px;
-  background: var(--c-brand);
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='138' viewBox='0 0 120 138'%3E%3Cpolygon points='60,2 118,32 118,92 60,122 2,92 2,32' fill='none' stroke='%23E55F1A' stroke-width='0.5' stroke-opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 120px 138px;
+  mask-image: radial-gradient(ellipse 70% 60% at 90% 50%, black 0%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 90% 50%, black 0%, transparent 75%);
+  pointer-events: none;
 }
 
-/* Layout */
+/* Subtle vertical orange accent on right */
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 30%;
+  right: 0;
+  width: 1px;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, var(--c-brand) 50%, transparent);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
 .hero__inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--sp-8);
-  align-items: center;
   position: relative;
   z-index: 1;
-}
-
-.hero__copy {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
+  gap: var(--sp-6);
 }
 
-/* Typography */
-h1 {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.hero__static {
-  font-family: var(--font-display);
-  font-size: var(--text-hero);
-  font-weight: 700;
-  color: var(--c-warm);
-  letter-spacing: -0.025em;
-  line-height: 1.08;
-}
-.hero__typewriter {
-  font-family: var(--font-display);
-  font-size: var(--text-hero);
-  font-weight: 700;
-  color: var(--c-brand);
-  letter-spacing: -0.025em;
-  line-height: 1.08;
+/* Top meta */
+.hero__meta {
   display: flex;
   align-items: center;
-  gap: 2px;
-  min-height: 1.15em;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--c-line);
 }
-.hero__cursor {
-  color: var(--c-brand);
-  animation: blink 1s step-end infinite;
-  font-weight: 300;
-}
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+.hero__meta-line {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.08em;
+  color: var(--c-ink-3);
+  text-transform: uppercase;
 }
 
+/* Editorial XL headline */
+.hero__h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+  color: var(--c-ink);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 16ch;
+  margin-block: var(--sp-3) var(--sp-2);
+}
+.h1__line { display: block; }
+.h1__line--em {
+  color: var(--c-brand);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.032em;
+}
+
+/* Bottom: sub + CTAs */
+.hero__bottom {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--sp-6);
+  align-items: end;
+  padding-block: var(--sp-3);
+  border-bottom: 1px solid var(--c-line);
+}
 .hero__sub {
-  font-size: clamp(0.9375rem, 1.4vw, 1.0625rem);
-  color: rgba(240,235,227,0.68);
-  line-height: 1.7;
-  max-width: 50ch;
+  font-size: clamp(1rem, 1.4vw, 1.1875rem);
+  color: var(--c-ink-2);
+  line-height: 1.55;
+  max-width: 56ch;
 }
 .hero__actions {
   display: flex;
-  gap: var(--sp-2);
+  gap: 12px;
   flex-wrap: wrap;
-  padding-top: var(--sp-1);
+  justify-content: flex-end;
 }
 
-/* Agent cards */
-.hero__visual { display: flex; justify-content: flex-end; }
-.agent-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  max-width: 340px;
-}
-
-.agent-card {
+/* Telemetry strip */
+.hero__telemetry {
   display: flex;
   align-items: center;
-  gap: var(--sp-2);
-  padding: 14px var(--sp-3);
-  background: var(--c-surface);
-  border: 1px solid var(--c-border);
-  border-top: 2px solid var(--c-brand);
-  border-radius: var(--r-card);
-  transition: transform 0.25s var(--ease-out-quart), border-color 0.2s;
-  animation: cardFloat var(--float-dur, 6s) ease-in-out infinite var(--float-delay, 0s);
+  gap: 0;
+  padding-top: var(--sp-3);
 }
-.ac--support { --float-dur: 6s; --float-delay: 0s; }
-.ac--sales   { --float-dur: 7s; --float-delay: 0.8s; }
-.ac--marketing { --float-dur: 5.5s; --float-delay: 1.6s; }
-
-@keyframes cardFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+.tel__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  padding-right: var(--sp-4);
+  border-right: 1px solid var(--c-line);
 }
-@media (prefers-reduced-motion: reduce) {
-  .agent-card { animation: none; }
-}
-
-.agent-card:hover { border-color: rgba(246,112,41,0.5); transform: translateX(-5px) translateY(0) !important; }
-
-.ac__icon {
-  width: 34px; height: 34px;
-  background: rgba(246,112,41,0.12);
-  border-radius: 4px;
-  display: grid;
-  place-items: center;
-  color: var(--c-brand);
-  flex-shrink: 0;
-}
-.ac__info { flex: 1; min-width: 0; }
-.ac__name {
-  font-family: var(--font-display);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--c-warm);
-}
-.ac__status {
-  font-size: 0.71875rem;
+.tel__item:last-child { border-right: 0; }
+.tel__label {
   color: var(--c-muted);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 2px;
-}
-.dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: #22c55e;
-  flex-shrink: 0;
-  animation: dotPulse 2.2s ease-in-out infinite;
-}
-@keyframes dotPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
-  50% { box-shadow: 0 0 0 4px rgba(34,197,94,0); }
-}
-@media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
-
-.ac__badge {
-  font-size: 0.625rem;
-  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--c-brand);
-  background: rgba(246,112,41,0.1);
-  padding: 2px 7px;
-  border-radius: 2px;
-  white-space: nowrap;
-  margin-left: auto;
+  letter-spacing: 0.1em;
+  font-size: 0.625rem;
+}
+.tel__value {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--c-ink);
+  letter-spacing: -0.01em;
 }
 
-/* Scroll indicator */
-.hero__scroll {
-  position: absolute;
-  bottom: var(--sp-4);
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
+.tel__item--live {
+  flex-direction: row;
   align-items: center;
-  gap: 6px;
-  z-index: 1;
+  gap: 8px;
+  flex: 0 0 auto;
+  padding-right: 0;
 }
-.scroll-line {
-  width: 1px; height: 48px;
-  background: linear-gradient(to bottom, var(--c-brand), transparent);
-  animation: scrollPulse 2s ease-in-out infinite;
+.tel__dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #16a34a;
+  flex-shrink: 0;
+  animation: livePulse 2.2s ease-in-out infinite;
 }
-@keyframes scrollPulse {
-  0%, 100% { opacity: 0.4; transform: scaleY(1); }
-  50% { opacity: 1; transform: scaleY(1.15); }
+@keyframes livePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(22,163,74,0.5); }
+  50% { box-shadow: 0 0 0 5px rgba(22,163,74,0); }
 }
-@media (prefers-reduced-motion: reduce) { .scroll-line { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .tel__dot { animation: none; } }
+.tel__live {
+  color: #16a34a;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.625rem;
+  font-weight: 500;
+}
 
 /* Responsive */
-@media (max-width: 900px) {
-  .hero__geo { display: none; }
-  .hero__inner { grid-template-columns: 1fr; gap: var(--sp-6); }
-  .hero__visual { justify-content: flex-start; }
-  .agent-stack { max-width: 100%; }
+@media (max-width: 768px) {
+  .hero__meta { flex-direction: column; align-items: flex-start; gap: var(--sp-1); }
+  .hero__bottom { grid-template-columns: 1fr; gap: var(--sp-3); }
+  .hero__actions { justify-content: flex-start; }
+  .hero__telemetry { flex-wrap: wrap; gap: var(--sp-2); }
+  .tel__item { border-right: 0; min-width: 40%; padding-right: 0; }
 }
 </style>

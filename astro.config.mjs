@@ -1,8 +1,12 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import node from '@astrojs/node';
 
+// Static output for AWS Amplify Hosting (CDN-backed).
+// Chat endpoint replaced by client-side rule-based fallback (no API key yet).
 export default defineConfig({
-  output: 'server',
-  adapter: node({ mode: 'standalone' }),
+  output: 'static',
+  build: {
+    inlineStylesheets: 'auto',
+  },
+  compressHTML: true,
 });

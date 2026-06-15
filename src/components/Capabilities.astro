@@ -1,0 +1,231 @@
+---
+import type { Content } from '../i18n/content';
+interface Props { t: Content }
+const { t } = Astro.props;
+const { capabilities } = t;
+---
+<section class="caps section" id="capacidades" aria-labelledby="caps-heading">
+  <div class="container">
+    <header class="caps__header gsap-reveal">
+      <div class="caps__head-left">
+        <span class="section-num mono">01 / <span data-i18n="nav.capabilities">{t.nav.capabilities}</span></span>
+        <h2 id="caps-heading" class="section-h">
+          <span data-i18n="capabilities.heading">{capabilities.heading}</span>
+          <span class="caps__accent" data-i18n="capabilities.headingAccent">{capabilities.headingAccent}</span>
+        </h2>
+      </div>
+      <p class="section-sub caps__sub" data-i18n="capabilities.sub">{capabilities.sub}</p>
+    </header>
+
+    <ol class="caps__list gsap-stagger" role="list">
+      {capabilities.cards.map((card, i) => (
+        <li class="cap">
+          <div class="cap__num-col">
+            <span class="cap__num mono">{String(i + 1).padStart(2, '0')}</span>
+            {card.tag && (
+              <span class="cap__tag mono" data-i18n={`capabilities.cards.${i}.tag`}>{card.tag}</span>
+            )}
+          </div>
+
+          <div class="cap__main">
+            <h3 class="cap__name" data-i18n={`capabilities.cards.${i}.name`}>{card.name}</h3>
+            <p class="cap__tagline" data-i18n={`capabilities.cards.${i}.tagline`}>{card.tagline}</p>
+            <p class="cap__desc" data-i18n={`capabilities.cards.${i}.desc`}>{card.desc}</p>
+          </div>
+
+          <div class="cap__side">
+            <ul class="cap__features" role="list">
+              {card.features.map((f, fi) => (
+                <li data-i18n={`capabilities.cards.${i}.features.${fi}`}>
+                  <span class="cap__bullet" aria-hidden="true"></span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <a href="#contacto" class="cap__cta">
+              <span data-i18n={`capabilities.cards.${i}.cta`}>{card.cta}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+.caps { background: var(--c-bg); }
+
+.caps__header {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--sp-8);
+  align-items: end;
+  padding-bottom: var(--sp-10);
+  border-bottom: 1px solid var(--c-line);
+  margin-bottom: 0;
+}
+.caps__head-left { display: flex; flex-direction: column; gap: var(--sp-3); }
+.section-num {
+  color: var(--c-brand);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: var(--text-label);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.section-num::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: var(--c-brand);
+}
+.section-h {
+  font-size: var(--text-h1);
+  letter-spacing: -0.024em;
+  color: var(--c-warm);
+  max-width: 18ch;
+  font-weight: 600;
+}
+.caps__accent {
+  display: block;
+  color: var(--c-brand);
+  font-style: italic;
+  font-weight: 500;
+}
+.caps__sub {
+  margin-top: 0;
+  font-size: var(--text-lg);
+  color: var(--c-ink-2);
+  line-height: 1.6;
+  max-width: 44ch;
+}
+
+/* List */
+.caps__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.cap {
+  display: grid;
+  grid-template-columns: 120px 1.2fr 1fr;
+  gap: var(--sp-6);
+  padding: var(--sp-8) 0;
+  border-bottom: 1px solid var(--c-line);
+  position: relative;
+  transition: background 0.3s var(--ease-out-quart);
+}
+.cap:last-child { border-bottom: 0; }
+.cap:hover { background: linear-gradient(to right, rgba(246,112,41,0.03), transparent 40%); }
+
+.cap__num-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.cap__num {
+  font-family: var(--font-mono);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--c-brand);
+  letter-spacing: -0.02em;
+}
+.cap__tag {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--c-warm);
+  background: rgba(246,112,41,0.08);
+  border: 1px solid rgba(246,112,41,0.25);
+  padding: 4px 8px;
+  border-radius: 2px;
+  width: fit-content;
+}
+
+.cap__main { display: flex; flex-direction: column; gap: var(--sp-2); }
+.cap__name {
+  font-size: clamp(1.5rem, 2.4vw, 2.125rem);
+  font-weight: 600;
+  color: var(--c-warm);
+  letter-spacing: -0.024em;
+  line-height: 1.1;
+}
+.cap__tagline {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--c-brand);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+.cap__desc {
+  font-size: var(--text-body);
+  color: var(--c-ink-2);
+  line-height: 1.65;
+  max-width: 42ch;
+}
+
+.cap__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  justify-content: space-between;
+}
+.cap__features {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.cap__features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: var(--text-small);
+  color: var(--c-ink-2);
+  line-height: 1.5;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--c-line);
+}
+.cap__features li:last-child { border-bottom: 0; padding-bottom: 0; }
+.cap__bullet {
+  flex-shrink: 0;
+  width: 8px; height: 8px;
+  background: var(--c-brand);
+  margin-top: 6px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.cap__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--c-brand);
+  width: fit-content;
+  padding-top: var(--sp-1);
+  border-top: 1px solid var(--c-brand-line);
+  transition: gap 0.2s, color 0.2s;
+}
+.cap__cta:hover { gap: 12px; color: var(--c-warm); }
+.cap__cta svg { transition: transform 0.2s; }
+.cap__cta:hover svg { transform: translateX(3px); }
+
+@media (max-width: 980px) {
+  .caps__header { grid-template-columns: 1fr; gap: var(--sp-3); }
+  .cap { grid-template-columns: 60px 1fr; gap: var(--sp-3); }
+  .cap__side { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .cap { grid-template-columns: 1fr; gap: var(--sp-2); padding: var(--sp-5) 0; }
+  .cap__num-col { flex-direction: row; align-items: center; }
+}
+</style>
