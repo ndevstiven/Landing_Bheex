@@ -1,0 +1,122 @@
+---
+import type { Content } from '../i18n/content';
+interface Props { t: Content }
+const { t } = Astro.props;
+const { howItWorks } = t;
+---
+<section class="hiw" id="como-funciona" aria-labelledby="hiw-heading">
+  <div class="container">
+    <h2 id="hiw-heading" class="hiw__heading gsap-reveal" data-i18n="howItWorks.heading">{howItWorks.heading}</h2>
+    <div class="hiw__steps gsap-stagger">
+      {howItWorks.steps.map((step, i) => (
+        <div class="hiw__step">
+          <div class="hiw__num" aria-hidden="true">{step.num}</div>
+          <div class="hiw__content">
+            <h3 data-i18n={`howItWorks.steps.${i}.title`}>{step.title}</h3>
+            <p data-i18n={`howItWorks.steps.${i}.body`}>{step.body}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+.hiw {
+  padding-block: var(--sp-16);
+  background: var(--c-surface);
+  border-top: 1px solid var(--c-border);
+  border-bottom: 1px solid var(--c-border);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Faint hex watermark */
+.hiw::after {
+  content: '';
+  position: absolute;
+  left: -160px; top: 50%;
+  transform: translateY(-50%);
+  width: 480px; height: 480px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 346'%3E%3Cpolygon points='150,4 296,80 296,232 150,308 4,232 4,80' fill='none' stroke='%23F67029' stroke-width='0.8' stroke-opacity='0.07'/%3E%3C/svg%3E") no-repeat center;
+  background-size: contain;
+  pointer-events: none;
+}
+
+.hiw__heading {
+  font-size: var(--text-h1);
+  font-weight: 600;
+  color: var(--c-warm);
+  letter-spacing: -0.02em;
+  max-width: 520px;
+  margin-bottom: var(--sp-12);
+  position: relative;
+  z-index: 1;
+}
+
+.hiw__steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Connecting line */
+.hiw__steps::after {
+  content: '';
+  position: absolute;
+  top: 23px;
+  left: calc(100% / 6);
+  right: calc(100% / 6);
+  height: 1px;
+  background: linear-gradient(to right, var(--c-brand) 0%, rgba(246,112,41,0.15) 50%, var(--c-brand) 100%);
+  pointer-events: none;
+}
+
+.hiw__step {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-right: var(--sp-4);
+  position: relative;
+  z-index: 1;
+}
+
+.hiw__num {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: var(--c-bg);
+  border: 2px solid var(--c-brand);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--c-brand);
+  margin-bottom: var(--sp-4);
+  flex-shrink: 0;
+}
+
+.hiw__content h3 {
+  font-size: var(--text-h3);
+  font-weight: 600;
+  color: var(--c-warm);
+  margin-bottom: var(--sp-1);
+  letter-spacing: -0.01em;
+}
+.hiw__content p {
+  font-size: var(--text-small);
+  color: rgba(240,235,227,0.6);
+  line-height: 1.65;
+  max-width: 26ch;
+}
+
+@media (max-width: 767px) {
+  .hiw__steps { grid-template-columns: 1fr; gap: var(--sp-6); }
+  .hiw__steps::after { display: none; }
+  .hiw__step { flex-direction: row; gap: var(--sp-3); padding-right: 0; }
+  .hiw__num { margin-bottom: 0; }
+  .hiw__content p { max-width: 100%; }
+}
+</style>

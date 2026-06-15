@@ -1,0 +1,52 @@
+/* ─── Bheex.ai Design Tokens ─────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Inter:wght@400;500&display=swap');
+
+:root {
+  /* Colors */
+  --c-brand:    #F67029;
+  --c-warm:     #FFD9AC;
+  --c-muted:    #575756;
+  --c-bg:       #0D0D0D;
+  --c-surface:  #1A1A1A;
+  --c-surface2: #222222;
+  --c-border:   rgba(87,87,86,0.4);
+  --c-ink:      #F0EBE3;
+
+  /* Typography */
+  --font-display: 'Rubik', sans-serif;
+  --font-body:    'Inter', sans-serif;
+
+  --text-hero:  clamp(2.75rem, 6vw, 5.25rem);
+  --text-h1:    clamp(2rem, 4vw, 3.25rem);
+  --text-h2:    clamp(1.5rem, 3vw, 2.125rem);
+  --text-h3:    clamp(1.125rem, 2vw, 1.375rem);
+  --text-body:  1rem;
+  --text-small: 0.875rem;
+  --text-label: 0.75rem;
+
+  /* Spacing (8px grid) */
+  --sp-1:  8px;
+  --sp-2:  16px;
+  --sp-3:  24px;
+  --sp-4:  32px;
+  --sp-6:  48px;
+  --sp-8:  64px;
+  --sp-12: 96px;
+  --sp-16: 128px;
+
+  /* Radius */
+  --r-card:   6px;
+  --r-btn:    4px;
+  --r-badge:  3px;
+
+  /* Z-index scale */
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-modal:    300;
+  --z-toast:    400;
+
+  /* Easing */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+}

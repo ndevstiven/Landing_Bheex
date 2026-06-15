@@ -1,0 +1,212 @@
+---
+import type { Content } from '../i18n/content';
+interface Props { t: Content }
+const { t } = Astro.props;
+const { cta } = t;
+---
+<section class="cta-section" id="contacto" aria-labelledby="cta-heading">
+  <div class="corner-accent top-right" aria-hidden="true"></div>
+  <div class="corner-accent bottom-left" aria-hidden="true"></div>
+  <div class="cta__hex-deco" aria-hidden="true">
+    <svg viewBox="0 0 400 460" fill="none">
+      <polygon points="200,6 394,106 394,306 200,406 6,306 6,106" stroke="#F67029" stroke-width="1.5" stroke-opacity="0.15"/>
+      <polygon points="200,40 360,120 360,280 200,360 40,280 40,120" stroke="#F67029" stroke-width="0.8" stroke-opacity="0.08"/>
+    </svg>
+  </div>
+
+  <div class="container cta__inner">
+    <div class="cta__copy gsap-reveal">
+      <h2 id="cta-heading" data-i18n="cta.heading">{cta.heading}</h2>
+      <p class="cta__sub" data-i18n="cta.sub">{cta.sub}</p>
+    </div>
+
+    <form class="cta__form gsap-reveal" style="--delay: 120ms" novalidate aria-label="Contact form" id="cta-form">
+      <div class="form__row">
+        <div class="form__field">
+          <label for="cta-name" data-i18n="cta.labelName">{cta.labelName}</label>
+          <input type="text" id="cta-name" name="name" placeholder={cta.placeholderName} required autocomplete="name"
+            data-i18n-placeholder="cta.placeholderName" />
+        </div>
+        <div class="form__field">
+          <label for="cta-email" data-i18n="cta.labelEmail">{cta.labelEmail}</label>
+          <input type="email" id="cta-email" name="email" placeholder={cta.placeholderEmail} required autocomplete="email"
+            data-i18n-placeholder="cta.placeholderEmail" />
+        </div>
+      </div>
+      <div class="form__field">
+        <label for="cta-usecase" data-i18n="cta.labelUsecase">{cta.labelUsecase}</label>
+        <select id="cta-usecase" name="usecase" required>
+          <option value="" disabled selected data-i18n="cta.selectDefault">{cta.selectDefault}</option>
+          {cta.options.map((o, i) => (
+            <option value={o.value} data-i18n={`cta.options.${i}.label`}>{o.label}</option>
+          ))}
+        </select>
+      </div>
+      <button type="submit" class="btn btn--primary form__submit" data-i18n="cta.submitLabel">
+        {cta.submitLabel}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+      <p class="form__note" data-i18n="cta.submitNote">{cta.submitNote}</p>
+    </form>
+  </div>
+</section>
+
+<style>
+.cta-section {
+  padding-block: var(--sp-16);
+  background: var(--c-surface);
+  border-top: 1px solid var(--c-border);
+  position: relative;
+  overflow: hidden;
+}
+.cta__hex-deco {
+  position: absolute;
+  right: -100px; top: 50%;
+  transform: translateY(-50%);
+  width: 380px; height: 440px;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.corner-accent {
+  position: absolute;
+  background: var(--c-brand);
+}
+.corner-accent.top-right {
+  top: 0; right: 0;
+  width: 120px; height: 4px;
+}
+.corner-accent.top-right::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 0;
+  width: 4px; height: 120px;
+  background: var(--c-brand);
+}
+.corner-accent.bottom-left {
+  bottom: 0; left: 0;
+  width: 120px; height: 4px;
+}
+.corner-accent.bottom-left::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 4px; height: 120px;
+  background: var(--c-brand);
+}
+
+.cta__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-12);
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.cta__copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.cta__copy h2 {
+  font-size: var(--text-h1);
+  font-weight: 600;
+  color: var(--c-warm);
+  letter-spacing: -0.02em;
+}
+.cta__sub {
+  color: rgba(240,235,227,0.65);
+  font-size: clamp(0.9375rem, 1.4vw, 1.0625rem);
+  line-height: 1.65;
+}
+
+.cta__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-2);
+}
+.form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form__field label {
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: rgba(240,235,227,0.72);
+}
+.form__field input,
+.form__field select {
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-btn);
+  padding: 12px 14px;
+  font-size: var(--text-small);
+  font-family: var(--font-body);
+  color: var(--c-ink);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  -webkit-appearance: none;
+}
+.form__field input::placeholder { color: rgba(87,87,86,0.8); }
+.form__field input:focus,
+.form__field select:focus {
+  border-color: var(--c-brand);
+  box-shadow: 0 0 0 3px rgba(246,112,41,0.12);
+}
+.form__field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23575756' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+.form__field select option {
+  background: var(--c-surface);
+  color: var(--c-ink);
+}
+.form__submit {
+  width: 100%;
+  justify-content: center;
+  padding: 14px;
+  font-size: 1rem;
+  margin-top: var(--sp-1);
+}
+.form__note {
+  font-size: 0.75rem;
+  color: var(--c-muted);
+  text-align: center;
+  max-width: 100%;
+}
+
+@media (max-width: 900px) {
+  .cta__inner { grid-template-columns: 1fr; gap: var(--sp-8); }
+  .cta__hex-deco { display: none; }
+}
+@media (max-width: 560px) {
+  .form__row { grid-template-columns: 1fr; }
+}
+</style>
+
+<script>
+const form = document.getElementById('cta-form') as HTMLFormElement;
+form?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = form.querySelector('.form__submit') as HTMLButtonElement;
+  btn.disabled = true;
+  btn.textContent = '...';
+  await new Promise(r => setTimeout(r, 1000));
+  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Demo solicitada`;
+  btn.style.background = '#22c55e';
+  btn.style.color = '#fff';
+});
+</script>

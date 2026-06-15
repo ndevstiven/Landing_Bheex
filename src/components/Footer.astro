@@ -1,0 +1,105 @@
+---
+import type { Content } from '../i18n/content';
+interface Props { t: Content }
+const { t } = Astro.props;
+const { footer } = t;
+const year = new Date().getFullYear();
+const navLinks = [
+  { href: '#agentes', key: 0 },
+  { href: '#como-funciona', key: 1 },
+  { href: '#resultados', key: 2 },
+];
+---
+<footer class="footer" aria-label="Footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <a href="/" aria-label="Bheex.ai">
+        <img src="/assets/logos/Bheex.Logos.principal.png" alt="Bheex.ai" height="32" />
+      </a>
+      <p class="footer__tagline" data-i18n="footer.tagline">{footer.tagline}</p>
+    </div>
+    <nav class="footer__nav" aria-label="Footer navigation">
+      <div class="footer__col">
+        <p class="footer__col-title" data-i18n="footer.product">{footer.product}</p>
+        {footer.navProduct.map((label, i) => (
+          <a href={navLinks[i]?.href || '#'} data-i18n={`footer.navProduct.${i}`}>{label}</a>
+        ))}
+      </div>
+      <div class="footer__col">
+        <p class="footer__col-title" data-i18n="footer.company">{footer.company}</p>
+        {footer.navCompany.map((label, i) => (
+          <a href="#" data-i18n={`footer.navCompany.${i}`}>{label}</a>
+        ))}
+      </div>
+    </nav>
+  </div>
+  <div class="container footer__bottom">
+    <p>&copy; {year} Bheex.ai. <span data-i18n="footer.legal">{footer.legal}</span></p>
+    <div class="footer__legal">
+      <a href="#" data-i18n="footer.privacy">{footer.privacy}</a>
+      <a href="#" data-i18n="footer.terms">{footer.terms}</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background: var(--c-surface);
+  border-top: 1px solid var(--c-border);
+  padding-top: var(--sp-12);
+}
+.footer__inner {
+  display: flex;
+  gap: var(--sp-12);
+  padding-bottom: var(--sp-8);
+  border-bottom: 1px solid var(--c-border);
+}
+.footer__brand {
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.footer__tagline {
+  font-size: var(--text-small);
+  color: rgba(240,235,227,0.48);
+  line-height: 1.65;
+  max-width: 28ch;
+  white-space: pre-line;
+}
+.footer__nav { display: flex; gap: var(--sp-8); }
+.footer__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.footer__col-title {
+  font-family: var(--font-display);
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--c-warm);
+  margin-bottom: var(--sp-1);
+}
+.footer__col a {
+  font-size: var(--text-small);
+  color: rgba(240,235,227,0.48);
+  transition: color 0.2s;
+}
+.footer__col a:hover { color: var(--c-brand); }
+.footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-block: var(--sp-3);
+  font-size: 0.75rem;
+  color: var(--c-muted);
+}
+.footer__legal { display: flex; gap: var(--sp-3); }
+.footer__legal a { color: var(--c-muted); transition: color 0.2s; }
+.footer__legal a:hover { color: var(--c-warm); }
+
+@media (max-width: 640px) {
+  .footer__inner { flex-direction: column; gap: var(--sp-6); }
+  .footer__bottom { flex-direction: column; gap: var(--sp-2); text-align: center; }
+}
+</style>

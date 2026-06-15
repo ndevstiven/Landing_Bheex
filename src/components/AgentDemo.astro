@@ -1,0 +1,489 @@
+---
+import type { Content } from '../i18n/content';
+interface Props { t: Content }
+const { t } = Astro.props;
+const { demo } = t;
+---
+<section class="demo-section" id="demo" aria-labelledby="demo-heading">
+  <div class="container">
+    <div class="demo__header">
+      <h2 id="demo-heading" data-i18n="demo.heading">{demo.heading}</h2>
+      <p class="demo__sub" data-i18n="demo.sub">{demo.sub}</p>
+    </div>
+
+    <div class="demo__layout">
+      <!-- Scenario selector -->
+      <div class="demo__sidebar">
+        <p class="demo__select-label" data-i18n="demo.selectLabel">{demo.selectLabel}</p>
+        <div class="demo__scenarios" role="tablist" aria-label="Agent scenarios">
+          {demo.scenarios.map((s, i) => (
+            <button
+              class={`scenario-btn ${i === 0 ? 'active' : ''}`}
+              role="tab"
+              aria-selected={i === 0 ? 'true' : 'false'}
+              aria-controls="demo-chat"
+              data-scenario={s.key}
+              data-i18n={`demo.scenarios.${i}.label`}
+            >
+              <span class="scenario-icon">
+                {s.key === 'support' && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>}
+                {s.key === 'sales' && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>}
+                {s.key === 'marketing' && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>}
+              </span>
+              {s.label}
+            </button>
+          ))}
+        </div>
+
+        <!-- Mini metrics -->
+        <div class="demo__metric">
+          <span class="dm__value">98%</span>
+          <span class="dm__label" data-i18n="results.metrics.0.label">{t.results.metrics[0].label}</span>
+        </div>
+      </div>
+
+      <!-- Chat window -->
+      <div class="demo__chat" id="demo-chat" role="tabpanel">
+        <div class="chat__header">
+          <div class="chat__avatar">
+            <img src="/assets/logos/Bheex.Isotipo.principal.png" alt="Bheex.ai agent" width="24" height="24" />
+          </div>
+          <div>
+            <p class="chat__name">Agente Bheex.ai</p>
+            <p class="chat__online"><span class="dot"></span>En línea</p>
+          </div>
+          <button class="chat__replay" id="replay-btn" title="Replay" aria-label="Replay conversation">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.96"/></svg>
+          </button>
+        </div>
+        <div class="chat__messages" id="chat-messages" aria-live="polite" aria-label="Chat conversation">
+          <!-- Populated by JS -->
+        </div>
+        <div class="chat__typing" id="chat-typing" aria-live="polite" aria-label="Agent is typing" hidden>
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pass conversations to JS — both languages, pick at runtime -->
+<script define:vars={{
+  conversationsEs: demo.conversations,
+  conversationsEn: {
+    support: [
+      { role: "user", text: "Hi, I can't access my account. The system says my password is incorrect." },
+      { role: "agent", text: "Hi. Let me verify your account right now.", delay: 900 },
+      { role: "agent", text: "I found your profile. I see there were 3 failed attempts this morning. For security, I temporarily blocked access.", delay: 1800 },
+      { role: "agent", text: "I sent you an email to your registered address with a link to reset your password. Did you receive it?", delay: 2700 },
+      { role: "user", text: "Yes, I got it. Thank you!" },
+      { role: "agent", text: "Done. If you need anything else, I'm here. Ticket #1842 resolved.", delay: 1200 }
+    ],
+    sales: [
+      { role: "user", text: "Hi, I saw your page. We have a 15-person sales team and waste a lot of time on follow-ups." },
+      { role: "agent", text: "Thanks for reaching out. How many new leads do you receive per month approximately?", delay: 800 },
+      { role: "user", text: "About 200 monthly leads, but we only close 12-15." },
+      { role: "agent", text: "That's a 6-7% close rate. The Bheex.ai Sales Agent can automatically qualify those 200 leads and prioritize the 40-50 with the highest probability of closing.", delay: 1600 },
+      { role: "agent", text: "Do you use HubSpot or Salesforce? The integration is direct.", delay: 2200 },
+      { role: "user", text: "We use HubSpot. This looks interesting." },
+      { role: "agent", text: "Perfect. I've scheduled a demo with our team for Thursday at 10am. Does that work for you?", delay: 1400 }
+    ],
+    marketing: [
+      { role: "user", text: "I need to know the performance of my campaigns from last week." },
+      { role: "agent", text: "Querying data from your active campaigns...", delay: 700 },
+      { role: "agent", text: "Summary for week of May 26: Email campaign A had 34% open rate (+8% vs previous week). LinkedIn Ads generated 47 clicks at $2.30 CPC.", delay: 1500 },
+      { role: "agent", text: "The best-performing ad was the retail success story. Would you like me to duplicate it with a 20% higher budget?", delay: 2400 },
+      { role: "user", text: "Yes, do it." },
+      { role: "agent", text: "Campaign duplicated and active. You'll receive the report next Monday.", delay: 1000 }
+    ]
+  },
+  scenarios: demo.scenarios
+}}>
+const isEn = (navigator.language || 'es').toLowerCase().startsWith('en');
+const conversations = isEn ? conversationsEn : conversationsEs;
+let currentScenario = 'support';
+let playing = false;
+let timeouts = [];
+
+const messagesEl = document.getElementById('chat-messages');
+const typingEl = document.getElementById('chat-typing');
+const replayBtn = document.getElementById('replay-btn');
+
+function clearTimeouts() {
+  timeouts.forEach(clearTimeout);
+  timeouts = [];
+}
+
+function createBubble(role, text) {
+  const div = document.createElement('div');
+  div.className = `msg msg--${role}`;
+  div.innerHTML = `
+    ${role === 'agent' ? '<div class="msg__avatar"><img src="/assets/logos/Bheex.Isotipo.principal.png" width="20" height="20" alt=""/></div>' : ''}
+    <div class="msg__bubble">${text}</div>
+  `;
+  return div;
+}
+
+async function playConversation(key) {
+  if (playing) return;
+  playing = true;
+  clearTimeouts();
+  messagesEl.innerHTML = '';
+  typingEl.hidden = true;
+
+  const msgs = conversations[key];
+  if (!msgs) { playing = false; return; }
+
+  let cumulativeDelay = 400;
+
+  for (let i = 0; i < msgs.length; i++) {
+    const m = msgs[i];
+    const delay = m.delay || 600;
+
+    if (m.role === 'agent') {
+      // Show typing indicator before agent message
+      const showTyping = ((d) => {
+        return () => {
+          typingEl.hidden = false;
+          messagesEl.scrollTop = messagesEl.scrollHeight;
+        };
+      })(cumulativeDelay);
+
+      const t1 = setTimeout(showTyping, cumulativeDelay);
+      timeouts.push(t1);
+      cumulativeDelay += delay;
+
+      const hideTypingAndShow = ((text, cd) => {
+        return () => {
+          typingEl.hidden = true;
+          const bubble = createBubble('agent', text);
+          messagesEl.appendChild(bubble);
+          messagesEl.scrollTop = messagesEl.scrollHeight;
+        };
+      })(m.text, cumulativeDelay);
+
+      const t2 = setTimeout(hideTypingAndShow, cumulativeDelay);
+      timeouts.push(t2);
+      cumulativeDelay += 200;
+    } else {
+      const showUser = ((text, cd) => {
+        return () => {
+          const bubble = createBubble('user', text);
+          messagesEl.appendChild(bubble);
+          messagesEl.scrollTop = messagesEl.scrollHeight;
+        };
+      })(m.text, cumulativeDelay);
+
+      const t3 = setTimeout(showUser, cumulativeDelay);
+      timeouts.push(t3);
+      cumulativeDelay += 600;
+    }
+  }
+
+  const done = setTimeout(() => { playing = false; }, cumulativeDelay + 500);
+  timeouts.push(done);
+}
+
+// Scenario buttons
+document.querySelectorAll('.scenario-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.scenario-btn').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    const key = btn.dataset.scenario;
+    if (key) {
+      currentScenario = key;
+      playing = false;
+      playConversation(key);
+    }
+  });
+});
+
+// Replay
+replayBtn?.addEventListener('click', () => {
+  playing = false;
+  playConversation(currentScenario);
+});
+
+// Auto-play on first intersection
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !playing && messagesEl.children.length === 0) {
+      setTimeout(() => playConversation(currentScenario), 400);
+      observer.disconnect();
+    }
+  });
+}, { threshold: 0.4 });
+
+const section = document.getElementById('demo');
+if (section) observer.observe(section);
+</script>
+
+<style>
+.demo-section {
+  padding-block: var(--sp-16);
+  background: var(--c-bg);
+  position: relative;
+}
+
+.demo__header {
+  margin-bottom: var(--sp-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  max-width: 600px;
+}
+
+.demo__header h2 {
+  font-size: var(--text-h1);
+  font-weight: 600;
+  color: var(--c-warm);
+  letter-spacing: -0.02em;
+}
+
+.demo__sub {
+  color: rgba(240,235,227,0.62);
+  font-size: clamp(0.9375rem, 1.4vw, 1.0625rem);
+  line-height: 1.65;
+}
+
+.demo__layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--sp-4);
+  align-items: start;
+}
+
+/* Sidebar */
+.demo__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.demo__select-label {
+  font-size: var(--text-small);
+  color: var(--c-muted);
+  font-weight: 500;
+  margin-bottom: var(--sp-1);
+}
+
+.demo__scenarios {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.scenario-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 10px 14px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-btn);
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: rgba(240,235,227,0.6);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.scenario-btn:hover {
+  color: var(--c-warm);
+  border-color: rgba(246,112,41,0.3);
+}
+.scenario-btn.active {
+  background: rgba(246,112,41,0.08);
+  border-color: var(--c-brand);
+  color: var(--c-brand);
+}
+.scenario-icon { color: inherit; display: flex; }
+
+.demo__metric {
+  margin-top: var(--sp-3);
+  padding: var(--sp-3);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-card);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dm__value {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--c-brand);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.dm__label {
+  font-size: 0.75rem;
+  color: rgba(240,235,227,0.5);
+  line-height: 1.4;
+  max-width: 20ch;
+}
+
+/* Chat window */
+.demo__chat {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat__header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 14px var(--sp-3);
+  border-bottom: 1px solid var(--c-border);
+  background: var(--c-surface2);
+}
+
+.chat__avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: rgba(246,112,41,0.12);
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(246,112,41,0.25);
+}
+.chat__avatar img { border-radius: 0; }
+
+.chat__name {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--c-warm);
+}
+.chat__online {
+  font-size: 0.6875rem;
+  color: var(--c-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.chat__online .dot {
+  width: 6px; height: 6px;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: dotPulse 2.2s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+  50% { box-shadow: 0 0 0 4px rgba(34,197,94,0); }
+}
+@media (prefers-reduced-motion: reduce) { .chat__online .dot { animation: none; } }
+
+.chat__replay {
+  margin-left: auto;
+  width: 28px; height: 28px;
+  border-radius: 4px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  color: var(--c-muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.chat__replay:hover { color: var(--c-brand); border-color: var(--c-brand); }
+
+.chat__messages {
+  min-height: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+
+/* Message bubbles */
+.msg {
+  display: flex;
+  gap: 8px;
+  animation: msgIn 0.25s var(--ease-out-quart) both;
+}
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .msg { animation: none; }
+}
+
+.msg--user { flex-direction: row-reverse; }
+
+.msg__avatar {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: rgba(246,112,41,0.12);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.msg__bubble {
+  max-width: 72%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.msg--agent .msg__bubble {
+  background: var(--c-surface2);
+  border: 1px solid var(--c-border);
+  color: var(--c-ink);
+  border-bottom-left-radius: 4px;
+}
+
+.msg--user .msg__bubble {
+  background: var(--c-brand);
+  color: #0D0D0D;
+  font-weight: 500;
+  border-bottom-right-radius: 4px;
+}
+
+/* Typing indicator */
+.chat__typing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px var(--sp-3);
+  border-top: 1px solid var(--c-border);
+}
+.chat__typing span {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--c-brand);
+  animation: typingDot 1.2s ease-in-out infinite;
+}
+.chat__typing span:nth-child(2) { animation-delay: 0.2s; }
+.chat__typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingDot {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chat__typing span { animation: none; opacity: 0.6; }
+}
+
+@media (max-width: 767px) {
+  .demo__layout { grid-template-columns: 1fr; }
+  .demo__sidebar { flex-direction: row; flex-wrap: wrap; gap: var(--sp-2); }
+  .demo__scenarios { flex-direction: row; }
+  .demo__metric { display: none; }
+  .scenario-btn { font-size: 0.75rem; padding: 8px 12px; }
+}
+</style>

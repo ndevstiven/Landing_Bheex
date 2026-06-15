@@ -1,0 +1,225 @@
+---
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import LogoCarousel from '../components/LogoCarousel.astro';
+import Agents from '../components/Agents.astro';
+import AgentDemo from '../components/AgentDemo.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import Results from '../components/Results.astro';
+import CTA from '../components/CTA.astro';
+import ChatWidget from '../components/ChatWidget.astro';
+import Footer from '../components/Footer.astro';
+import { content } from '../i18n/content';
+
+// Default to Spanish; JS will swap if browser is English
+const t = content.es;
+---
+<!doctype html>
+<html lang="es" id="html-root">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content={t.meta.description} data-i18n="meta.description" />
+  <title data-i18n="meta.title">{t.meta.title}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <meta property="og:title" content={t.meta.title} />
+  <meta property="og:description" content={t.meta.description} />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" type="image/png" href="/assets/logos/Bheex.Isotipo.principal.png" />
+
+  <style is:global>
+    @import '../styles/tokens.css';
+    @import '../styles/global.css';
+  </style>
+</head>
+<body>
+  <Nav t={t} />
+  <main id="main">
+    <Hero t={t} />
+    <LogoCarousel t={t} />
+    <Agents t={t} />
+    <AgentDemo t={t} />
+    <HowItWorks t={t} />
+    <Results t={t} />
+    <CTA t={t} />
+  </main>
+  <Footer t={t} />
+  <ChatWidget t={t} />
+
+  <!-- i18n auto-detect -->
+  <script>
+    import { content } from '../i18n/content';
+
+    function getLang(): 'en' | 'es' {
+      const lang = navigator.language || 'es';
+      return lang.toLowerCase().startsWith('en') ? 'en' : 'es';
+    }
+
+    const lang = getLang();
+    if (lang === 'en') {
+      const t = content.en;
+      document.documentElement.lang = 'en';
+
+      // Swap all data-i18n elements
+      document.querySelectorAll('[data-i18n]').forEach((el) => {
+        const key = (el as HTMLElement).dataset.i18n!;
+        const val = getNestedVal(t, key);
+        if (typeof val === 'string') el.textContent = val;
+      });
+
+      // Swap placeholder attributes
+      document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+        const key = (el as HTMLElement).dataset.i18nPlaceholder!;
+        const val = getNestedVal(t, key);
+        if (typeof val === 'string') (el as HTMLInputElement).placeholder = val;
+      });
+
+      // Swap <title> and <meta description>
+      const titleEl = document.querySelector('title[data-i18n]');
+      if (titleEl) titleEl.textContent = t.meta.title;
+      const descEl = document.querySelector('meta[name="description"]');
+      if (descEl) descEl.setAttribute('content', t.meta.description);
+    }
+
+    function getNestedVal(obj: Record<string, unknown>, path: string): unknown {
+      return path.split('.').reduce((acc: unknown, key: string) => {
+        if (acc && typeof acc === 'object' && key in (acc as object)) {
+          return (acc as Record<string, unknown>)[key];
+        }
+        return undefined;
+      }, obj as unknown);
+    }
+  </script>
+
+  <!-- GSAP scroll-driven animations -->
+  <script>
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Staggered section reveals
+    gsap.utils.toArray<HTMLElement>('.gsap-reveal').forEach((el) => {
+      gsap.from(el, {
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+        y: 32,
+        opacity: 0,
+        duration: 0.65,
+        ease: 'power3.out',
+      });
+    });
+
+    // Stagger groups
+    gsap.utils.toArray<HTMLElement>('.gsap-stagger').forEach((group) => {
+      const children = group.children;
+      gsap.from(children, {
+        scrollTrigger: {
+          trigger: group,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        },
+        y: 28,
+        opacity: 0,
+        duration: 0.55,
+        stagger: 0.1,
+        ease: 'power3.out',
+      });
+    });
+
+    // Number counter for metrics
+    document.querySelectorAll('.counter').forEach((el) => {
+      const target = parseFloat(el.getAttribute('data-target') || '0');
+      const suffix = el.getAttribute('data-suffix') || '';
+      const isDecimal = target % 1 !== 0;
+
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 80%',
+        once: true,
+        onEnter: () => {
+          gsap.from({ val: 0 }, {
+            val: target,
+            duration: 1.8,
+            ease: 'power2.out',
+            onUpdate: function() {
+              el.textContent = (isDecimal ? this.targets()[0].val.toFixed(1) : Math.round(this.targets()[0].val)) + suffix;
+            },
+          });
+        },
+      });
+    });
+
+    // Smooth scroll with Lenis
+    import('@studio-freight/lenis').then(({ default: Lenis }) => {
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+      });
+
+      // Use ONLY the gsap ticker — do NOT also run a separate requestAnimationFrame loop
+      gsap.ticker.add((time: number) => { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+
+      // Keep ScrollTrigger in sync with Lenis scroll position
+      lenis.on('scroll', () => ScrollTrigger.update());
+
+      // Intercept all anchor links so Lenis handles them smoothly
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener('click', (e) => {
+          const href = (anchor as HTMLAnchorElement).getAttribute('href');
+          if (!href || href === '#') return;
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            lenis.scrollTo(target as HTMLElement, { duration: 1.3, offset: -72 });
+          }
+        });
+      });
+
+      // Refresh ScrollTrigger after Lenis is set up
+      ScrollTrigger.refresh();
+    }).catch(() => {
+      // Fallback: native smooth scroll if Lenis fails
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener('click', (e) => {
+          const href = (anchor as HTMLAnchorElement).getAttribute('href');
+          if (!href || href === '#') return;
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+    });
+  </script>
+
+  <!-- Scroll reveal observer (fallback / initial state) -->
+  <script>
+    document.documentElement.classList.add('js-ready');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            (entry.target as HTMLElement).style.transitionDelay =
+              (entry.target as HTMLElement).style.getPropertyValue('--delay') || '0ms';
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -24px 0px' }
+    );
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>

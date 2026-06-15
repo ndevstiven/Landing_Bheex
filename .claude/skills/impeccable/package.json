@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "css-select": "^7.0.0",
+    "css-tree": "^3.2.1",
+    "domutils": "^4.0.2",
+    "htmlparser2": "^12.0.0",
+    "impeccable": "file:../../../../../../../../private/tmp/skill-installs/impeccable",
+    "marked": "^18.0.5"
+  }
+}

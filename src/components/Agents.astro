@@ -1,0 +1,153 @@
+---
+import type { Content } from '../i18n/content';
+interface Props { t: Content }
+const { t } = Astro.props;
+const { agents } = t;
+
+const icons = [
+  `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+  `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>`,
+  `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`,
+];
+---
+<section class="agents" id="agentes" aria-labelledby="agents-heading">
+  <div class="container">
+    <div class="agents__header gsap-reveal">
+      <h2 id="agents-heading">
+        <span data-i18n="agents.heading">{agents.heading}</span><br>
+        <span class="agents__accent" data-i18n="agents.headingAccent">{agents.headingAccent}</span>
+      </h2>
+      <p class="agents__sub" data-i18n="agents.sub">{agents.sub}</p>
+    </div>
+
+    <div class="agents__grid gsap-stagger">
+      {agents.cards.map((card, i) => (
+        <article class={`agent ${i === 0 ? 'agent--featured' : ''}`}>
+          <div class="agent__icon" aria-hidden="true" set:html={icons[i]} />
+          <h3 class="agent__name" data-i18n={`agents.cards.${i}.name`}>{card.name}</h3>
+          <p class="agent__tagline" data-i18n={`agents.cards.${i}.tagline`}>{card.tagline}</p>
+          <p class="agent__desc" data-i18n={`agents.cards.${i}.desc`}>{card.desc}</p>
+          <ul class="agent__features">
+            {card.features.map((f, fi) => (
+              <li data-i18n={`agents.cards.${i}.features.${fi}`}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F67029" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                {f}
+              </li>
+            ))}
+          </ul>
+          <a href="#contacto" class={`btn ${i === 0 ? 'btn--primary' : 'btn--ghost'} agent__cta`} data-i18n={`agents.cards.${i}.cta`}>
+            {card.cta}
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+.agents {
+  padding-block: var(--sp-16);
+  background: var(--c-bg);
+}
+
+.agents__header {
+  max-width: 640px;
+  margin-bottom: var(--sp-8);
+}
+
+.agents__header h2 {
+  font-size: var(--text-h1);
+  font-weight: 600;
+  color: var(--c-warm);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--sp-2);
+}
+.agents__accent { color: var(--c-brand); }
+
+.agents__sub {
+  color: rgba(240,235,227,0.62);
+  font-size: clamp(0.9375rem, 1.4vw, 1.0625rem);
+  line-height: 1.65;
+}
+
+.agents__grid {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr 1fr;
+  gap: var(--sp-3);
+  align-items: start;
+}
+
+.agent {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-top: 2px solid var(--c-brand);
+  border-radius: var(--r-card);
+  padding: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  transition: border-color 0.2s, transform 0.25s var(--ease-out-quart),
+              box-shadow 0.25s;
+}
+.agent:hover {
+  border-color: rgba(246,112,41,0.45);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+.agent--featured {
+  background: var(--c-surface2);
+  border-top-width: 3px;
+  padding: var(--sp-6) var(--sp-4);
+  gap: var(--sp-3);
+}
+
+.agent__icon {
+  width: 48px; height: 48px;
+  background: rgba(246,112,41,0.1);
+  border-radius: 4px;
+  display: grid;
+  place-items: center;
+  color: var(--c-brand);
+  margin-bottom: var(--sp-1);
+}
+.agent__name {
+  font-size: var(--text-h3);
+  font-weight: 600;
+  color: var(--c-warm);
+  letter-spacing: -0.01em;
+}
+.agent__tagline {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--c-brand);
+  line-height: 1.4;
+}
+.agent__desc {
+  font-size: var(--text-small);
+  color: rgba(240,235,227,0.6);
+  line-height: 1.65;
+}
+.agent__features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: var(--sp-1);
+}
+.agent__features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--text-small);
+  color: rgba(240,235,227,0.72);
+  line-height: 1.5;
+}
+.agent__features svg { flex-shrink: 0; margin-top: 3px; }
+.agent__cta { margin-top: auto; align-self: flex-start; }
+
+@media (max-width: 900px) {
+  .agents__grid { grid-template-columns: 1fr; }
+  .agent--featured { padding: var(--sp-4); gap: var(--sp-2); }
+}
+</style>

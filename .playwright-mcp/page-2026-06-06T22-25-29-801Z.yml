@@ -1,0 +1,236 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Bheex.ai inicio" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "Bheex.ai" [ref=e5]
+      - button "Abrir menú" [ref=e6] [cursor=pointer]
+  - main [ref=e10]:
+    - region "Tu empresa trabaja. Los agentes ejecutan." [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e13]:
+          - paragraph [ref=e14]: Plataforma de agentes IA
+          - heading "Tu empresa trabaja. Los agentes ejecutan." [level=1] [ref=e15]:
+            - text: Tu empresa trabaja.
+            - generic [ref=e16]: Los agentes ejecutan.
+          - paragraph [ref=e17]: Bheex.ai despliega agentes de inteligencia artificial en soporte, ventas y marketing. Operaciones automáticas en horas, no en meses.
+          - generic [ref=e18]:
+            - link "Solicitar demo gratuita" [ref=e19] [cursor=pointer]:
+              - /url: "#contacto"
+            - link "Ver cómo funciona" [ref=e20] [cursor=pointer]:
+              - /url: "#como-funciona"
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - img [ref=e25]
+            - generic [ref=e27]:
+              - paragraph [ref=e28]: Agente Soporte
+              - paragraph [ref=e29]: "Resolviendo ticket #1842"
+            - generic [ref=e31]: En vivo
+          - generic [ref=e32]:
+            - img [ref=e34]
+            - generic [ref=e37]:
+              - paragraph [ref=e38]: Agente Ventas
+              - paragraph [ref=e39]: 3 leads calificados hoy
+            - generic [ref=e41]: Activo
+          - generic [ref=e42]:
+            - img [ref=e44]
+            - generic [ref=e50]:
+              - paragraph [ref=e51]: Agente Marketing
+              - paragraph [ref=e52]: Campaña publicada
+            - generic [ref=e54]: Activo
+    - region "Resultados clave" [ref=e55]:
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - generic [ref=e59]: 200+
+          - generic [ref=e60]: empresas activas
+        - generic [ref=e61]:
+          - generic [ref=e62]: 98%
+          - generic [ref=e63]: resolución en primer contacto
+        - generic [ref=e64]:
+          - generic [ref=e65]: 3x
+          - generic [ref=e66]: más leads calificados
+        - generic [ref=e67]:
+          - generic [ref=e68]: < 1 día
+          - generic [ref=e69]: para tener tu agente en vivo
+    - region "Un equipo digital. Tres frentes cubiertos." [ref=e71]:
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - paragraph [ref=e74]: Agentes disponibles
+          - heading "Un equipo digital. Tres frentes cubiertos." [level=2] [ref=e75]:
+            - text: Un equipo digital.
+            - text: Tres frentes cubiertos.
+          - paragraph [ref=e76]: Cada agente opera de forma autónoma, aprende de tu negocio y trabaja junto con tu equipo humano sin fricción.
+        - generic [ref=e77]:
+          - article [ref=e78]:
+            - img [ref=e80]
+            - heading "Agente Soporte" [level=3] [ref=e82]
+            - paragraph [ref=e83]: Atención 24/7 sin contratar más personal.
+            - paragraph [ref=e84]: Responde consultas, resuelve tickets, escala casos complejos al equipo humano y registra cada interacción. Tu servicio al cliente opera sin pausas.
+            - list "Funciones de Agente Soporte" [ref=e85]:
+              - listitem [ref=e86]:
+                - img [ref=e87]
+                - text: Resolución automática de tickets frecuentes
+              - listitem [ref=e89]:
+                - img [ref=e90]
+                - text: Escalamiento inteligente por prioridad
+              - listitem [ref=e92]:
+                - img [ref=e93]
+                - text: Integración con tu CRM o helpdesk
+              - listitem [ref=e95]:
+                - img [ref=e96]
+                - text: Reportes diarios de volumen y satisfacción
+            - link "Activar agente" [ref=e98] [cursor=pointer]:
+              - /url: "#contacto"
+          - article [ref=e99]:
+            - img [ref=e101]
+            - heading "Agente Ventas" [level=3] [ref=e104]
+            - paragraph [ref=e105]: Califica leads mientras tu equipo cierra negocios.
+            - paragraph [ref=e106]: Identifica prospectos de alto valor, nutre conversaciones de seguimiento y actualiza tu CRM sin intervención manual.
+            - list "Funciones de Agente Ventas" [ref=e107]:
+              - listitem [ref=e108]:
+                - img [ref=e109]
+                - text: Calificación automática de leads entrantes
+              - listitem [ref=e111]:
+                - img [ref=e112]
+                - text: Secuencias de seguimiento personalizadas
+              - listitem [ref=e114]:
+                - img [ref=e115]
+                - text: Sincronización con HubSpot, Salesforce u otros
+            - link "Activar agente" [ref=e117] [cursor=pointer]:
+              - /url: "#contacto"
+          - article [ref=e118]:
+            - img [ref=e120]
+            - heading "Agente Marketing" [level=3] [ref=e126]
+            - paragraph [ref=e127]: Campañas que se ejecutan solas.
+            - paragraph [ref=e128]: Programa contenido, analiza métricas de campaña y segmenta audiencias. Tu equipo de marketing trabaja en estrategia, no en tareas repetitivas.
+            - list "Funciones de Agente Marketing" [ref=e129]:
+              - listitem [ref=e130]:
+                - img [ref=e131]
+                - text: Publicación automática en múltiples canales
+              - listitem [ref=e133]:
+                - img [ref=e134]
+                - text: Reportes de rendimiento en tiempo real
+              - listitem [ref=e136]:
+                - img [ref=e137]
+                - text: Segmentación dinámica de audiencias
+            - link "Activar agente" [ref=e139] [cursor=pointer]:
+              - /url: "#contacto"
+    - region "De la idea al agente activo en un día." [ref=e140]:
+      - generic [ref=e141]:
+        - generic [ref=e142]:
+          - paragraph [ref=e143]: Proceso
+          - heading "De la idea al agente activo en un día." [level=2] [ref=e144]
+        - generic [ref=e145]:
+          - generic [ref=e146]:
+            - generic [ref=e147]: "1"
+            - generic [ref=e148]:
+              - heading "Defines el objetivo" [level=3] [ref=e149]
+              - paragraph [ref=e150]: "Nos cuentas qué proceso quieres automatizar: soporte, calificación de leads, campañas. No necesitas saber de IA."
+          - generic [ref=e151]:
+            - generic [ref=e152]: "2"
+            - generic [ref=e153]:
+              - heading "Configuramos tu agente" [level=3] [ref=e154]
+              - paragraph [ref=e155]: Nuestro equipo conecta el agente con tus herramientas existentes (CRM, helpdesk, email) y lo entrena con el contexto de tu negocio.
+          - generic [ref=e156]:
+            - generic [ref=e157]: "3"
+            - generic [ref=e158]:
+              - heading "Tu agente entra en operación" [level=3] [ref=e159]
+              - paragraph [ref=e160]: En menos de 24 horas el agente está activo, visible en tu dashboard y mejorando continuamente con cada interacción.
+    - region "Números reales de empresas en operación." [ref=e161]:
+      - generic [ref=e162]:
+        - generic [ref=e163]:
+          - paragraph [ref=e164]: Resultados
+          - heading "Números reales de empresas en operación." [level=2] [ref=e165]
+          - paragraph [ref=e166]: Datos de clientes activos en los primeros 90 días de uso.
+        - generic [ref=e167]:
+          - generic [ref=e168]:
+            - generic [ref=e169]: 78%
+            - generic [ref=e170]: reducción en tiempo de respuesta de soporte
+          - generic [ref=e172]:
+            - generic [ref=e173]: 3.4x
+            - generic [ref=e174]: más leads calificados por mes
+          - generic [ref=e176]:
+            - generic [ref=e177]: 40h
+            - generic [ref=e178]: ahorradas por semana en tareas repetitivas
+          - generic [ref=e180]:
+            - generic [ref=e181]: < 24h
+            - generic [ref=e182]: de tu primer agente en producción
+        - blockquote [ref=e184]:
+          - paragraph [ref=e185]: "\"Pasamos de responder tickets en 6 horas a menos de 20 minutos. El agente de Bheex.ai resuelve el 80% sin que nuestro equipo intervenga.\""
+          - generic [ref=e186]:
+            - strong [ref=e187]: María González
+            - generic [ref=e188]: Directora de Operaciones, Fintech LATAM
+    - region "Tu primer agente en producción antes de mañana." [ref=e189]:
+      - generic [ref=e192]:
+        - generic [ref=e193]:
+          - paragraph [ref=e194]: Empieza ahora
+          - heading "Tu primer agente en producción antes de mañana." [level=2] [ref=e195]
+          - paragraph [ref=e196]: Sin contratos largos. Sin setup complicado. El equipo de Bheex.ai configura, conecta y lanza tu agente junto contigo.
+        - form "Formulario de contacto" [ref=e197]:
+          - generic [ref=e198]:
+            - generic [ref=e199]:
+              - generic [ref=e200]: Nombre
+              - textbox "Nombre" [ref=e201]:
+                - /placeholder: Tu nombre completo
+            - generic [ref=e202]:
+              - generic [ref=e203]: Email corporativo
+              - textbox "Email corporativo" [ref=e204]:
+                - /placeholder: nombre@empresa.com
+          - generic [ref=e205]:
+            - generic [ref=e206]: ¿Qué quieres automatizar?
+            - combobox "¿Qué quieres automatizar?" [ref=e207] [cursor=pointer]:
+              - option "Selecciona un área" [disabled] [selected]
+              - option "Soporte al cliente"
+              - option "Calificación de ventas"
+              - option "Automatización de marketing"
+              - option "Otro proceso"
+          - button "Solicitar demo gratuita" [ref=e208] [cursor=pointer]:
+            - text: Solicitar demo gratuita
+            - img [ref=e209]
+          - paragraph [ref=e211]: Sin tarjeta de crédito. Respuesta en menos de 4 horas.
+  - contentinfo "Pie de página" [ref=e212]:
+    - generic [ref=e213]:
+      - generic [ref=e214]:
+        - link "Bheex.ai inicio" [ref=e215] [cursor=pointer]:
+          - /url: /
+          - img "Bheex.ai" [ref=e216]
+        - paragraph [ref=e217]:
+          - text: Agentes de IA para soporte, ventas y marketing.
+          - text: Tu equipo digital, disponible 24/7.
+      - navigation "Navegación del footer" [ref=e218]:
+        - generic [ref=e219]:
+          - paragraph [ref=e220]: Producto
+          - link "Agentes" [ref=e221] [cursor=pointer]:
+            - /url: "#agentes"
+          - link "Cómo funciona" [ref=e222] [cursor=pointer]:
+            - /url: "#como-funciona"
+          - link "Resultados" [ref=e223] [cursor=pointer]:
+            - /url: "#resultados"
+        - generic [ref=e224]:
+          - paragraph [ref=e225]: Empresa
+          - link "Sobre Bheex.ai" [ref=e226] [cursor=pointer]:
+            - /url: "#"
+          - link "Blog" [ref=e227] [cursor=pointer]:
+            - /url: "#"
+          - link "Contacto" [ref=e228] [cursor=pointer]:
+            - /url: "#contacto"
+    - generic [ref=e229]:
+      - paragraph [ref=e230]: © 2026 Bheex.ai. Todos los derechos reservados.
+      - generic [ref=e231]:
+        - link "Privacidad" [ref=e232] [cursor=pointer]:
+          - /url: "#"
+        - link "Términos" [ref=e233] [cursor=pointer]:
+          - /url: "#"
+  - generic [ref=e236]:
+    - button "Menu" [ref=e237]:
+      - img [ref=e239]
+      - generic: Menu
+    - button "Inspect" [ref=e243]:
+      - img [ref=e245]
+      - generic: Inspect
+    - button "Audit" [ref=e247]:
+      - img [ref=e249]
+      - generic: Audit
+    - button "Settings" [ref=e252]:
+      - img [ref=e254]
+      - generic: Settings

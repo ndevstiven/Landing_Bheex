@@ -1,0 +1,136 @@
+---
+import type { Content } from '../i18n/content';
+interface Props { t: Content }
+const { t } = Astro.props;
+
+const integrations = [
+  { name: "HubSpot", abbr: "HS" },
+  { name: "Salesforce", abbr: "SF" },
+  { name: "Zendesk", abbr: "ZD" },
+  { name: "Slack", abbr: "SL" },
+  { name: "WhatsApp", abbr: "WA" },
+  { name: "Notion", abbr: "NT" },
+  { name: "Gmail", abbr: "GM" },
+  { name: "Intercom", abbr: "IC" },
+  { name: "Shopify", abbr: "SP" },
+  { name: "Stripe", abbr: "ST" },
+  { name: "Make", abbr: "MK" },
+  { name: "Zapier", abbr: "ZP" },
+];
+// Duplicate for infinite loop
+const items = [...integrations, ...integrations];
+---
+<section class="carousel-section" aria-label={t.carousel.label}>
+  <div class="container carousel__header">
+    <p class="carousel__label" data-i18n="carousel.label">{t.carousel.label}</p>
+  </div>
+  <div class="carousel__track-wrap" aria-hidden="true">
+    <div class="carousel__fade carousel__fade--left"></div>
+    <div class="carousel__track" id="carousel-track">
+      {items.map((item) => (
+        <div class="carousel__item">
+          <div class="carousel__logo">
+            <span class="logo-abbr">{item.abbr}</span>
+          </div>
+          <span class="logo-name">{item.name}</span>
+        </div>
+      ))}
+    </div>
+    <div class="carousel__fade carousel__fade--right"></div>
+  </div>
+</section>
+
+<style>
+.carousel-section {
+  padding-block: var(--sp-6);
+  border-top: 1px solid var(--c-border);
+  border-bottom: 1px solid var(--c-border);
+  background: var(--c-surface);
+  overflow: hidden;
+}
+
+.carousel__header {
+  margin-bottom: var(--sp-3);
+}
+
+.carousel__label {
+  font-size: var(--text-small);
+  color: var(--c-muted);
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.carousel__track-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel__fade {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+.carousel__fade--left {
+  left: 0;
+  background: linear-gradient(to right, var(--c-surface), transparent);
+}
+.carousel__fade--right {
+  right: 0;
+  background: linear-gradient(to left, var(--c-surface), transparent);
+}
+
+.carousel__track {
+  display: flex;
+  gap: var(--sp-6);
+  width: max-content;
+  animation: marquee 28s linear infinite;
+  padding-block: var(--sp-2);
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .carousel__track { animation: none; flex-wrap: wrap; width: 100%; justify-content: center; }
+}
+
+.carousel__track:hover { animation-play-state: paused; }
+
+.carousel__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  opacity: 0.55;
+  transition: opacity 0.2s;
+}
+.carousel__item:hover { opacity: 1; }
+
+.carousel__logo {
+  width: 36px; height: 36px;
+  background: var(--c-surface2);
+  border: 1px solid var(--c-border);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+}
+
+.logo-abbr {
+  font-family: var(--font-display);
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--c-brand);
+  letter-spacing: 0.04em;
+}
+
+.logo-name {
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--c-warm);
+  white-space: nowrap;
+}
+</style>
