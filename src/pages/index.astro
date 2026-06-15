@@ -14,25 +14,115 @@ import ChatWidget from '../components/ChatWidget.astro';
 import Footer from '../components/Footer.astro';
 import { content } from '../i18n/content';
 
-// Default to Spanish; JS will swap if browser is English
+// Self-hosted fonts — Vite bundles & hashes woff2 to /_astro/
+import '@fontsource/rubik/500.css';
+import '@fontsource/rubik/600.css';
+import '@fontsource/rubik/500-italic.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/jetbrains-mono/400.css';
+
+
 const t = content.es;
+const SITE_URL = 'https://main.dgb1n90hejkf4.amplifyapp.com';
+const OG_IMAGE = `${SITE_URL}/assets/og-image.png`;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${SITE_URL}#org`,
+      name: 'Bheex.ai',
+      url: SITE_URL,
+      logo: `${SITE_URL}/assets/logos/optimized/logo-positivo.png`,
+      description: t.meta.description,
+      sameAs: [
+        'https://www.instagram.com/bheex.ia',
+        'https://www.linkedin.com/company/129104171',
+        'https://www.facebook.com/profile.php?id=61590543954849',
+        'https://www.tiktok.com/@bheex0',
+      ],
+    },
+    {
+      '@type': 'ProfessionalService',
+      '@id': `${SITE_URL}#service`,
+      name: 'Bheex.ai — AI agency & software development',
+      description: t.meta.description,
+      url: SITE_URL,
+      provider: { '@id': `${SITE_URL}#org` },
+      areaServed: 'Worldwide',
+      serviceType: [
+        'Custom AI agent development',
+        'Multi-agent orchestration',
+        'Software development',
+        'System integration',
+        'Technical audit',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE_URL}#website`,
+      url: SITE_URL,
+      name: t.meta.title,
+      description: t.meta.description,
+      inLanguage: ['es', 'en'],
+      publisher: { '@id': `${SITE_URL}#org` },
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: t.faq.items.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ],
+};
 ---
 <!doctype html>
 <html lang="es" id="html-root">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content={t.meta.description} data-i18n="meta.description" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#F7F4EE" />
+  <meta name="color-scheme" content="light" />
+
   <title data-i18n="meta.title">{t.meta.title}</title>
+  <meta name="description" content={t.meta.description} data-i18n="meta.description" />
+  <meta name="keywords" content="AI agency, agentes de IA, custom AI agents, software development, AI consulting, multi-agent orchestration, AI engineering, Claude, GPT" />
+  <meta name="author" content="Bheex.ai" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="canonical" href={SITE_URL} />
+  <link rel="alternate" hreflang="es" href={SITE_URL} />
+  <link rel="alternate" hreflang="en" href={SITE_URL} />
+  <link rel="alternate" hreflang="x-default" href={SITE_URL} />
 
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={SITE_URL} />
   <meta property="og:title" content={t.meta.title} />
   <meta property="og:description" content={t.meta.description} />
-  <meta property="og:type" content="website" />
+  <meta property="og:image" content={OG_IMAGE} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Bheex.ai — We build custom AI agents for your operation" />
+  <meta property="og:locale" content="es_ES" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta property="og:site_name" content="Bheex.ai" />
 
-  <link rel="icon" type="image/png" href="/assets/logos/Bheex.Isotipo.principal.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={t.meta.title} />
+  <meta name="twitter:description" content={t.meta.description} />
+  <meta name="twitter:image" content={OG_IMAGE} />
+  <meta name="twitter:image:alt" content="Bheex.ai" />
+
+  <link rel="icon" type="image/png" sizes="64x64" href="/assets/logos/optimized/isotipo.png" />
+  <link rel="apple-touch-icon" href="/assets/logos/optimized/isotipo.png" />
+
+  <link rel="preload" as="image" href="/assets/logos/optimized/logo-positivo.webp" type="image/webp" fetchpriority="high" />
+
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
   <style is:global>
     @import '../styles/tokens.css';
@@ -56,7 +146,6 @@ const t = content.es;
   <Footer t={t} />
   <ChatWidget t={t} />
 
-  <!-- i18n auto-detect -->
   <script>
     import { content } from '../i18n/content';
 
@@ -69,22 +158,16 @@ const t = content.es;
     if (lang === 'en') {
       const t = content.en;
       document.documentElement.lang = 'en';
-
-      // Swap all data-i18n elements
       document.querySelectorAll('[data-i18n]').forEach((el) => {
         const key = (el as HTMLElement).dataset.i18n!;
         const val = getNestedVal(t, key);
         if (typeof val === 'string') el.textContent = val;
       });
-
-      // Swap placeholder attributes
       document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
         const key = (el as HTMLElement).dataset.i18nPlaceholder!;
         const val = getNestedVal(t, key);
         if (typeof val === 'string') (el as HTMLInputElement).placeholder = val;
       });
-
-      // Swap <title> and <meta description>
       const titleEl = document.querySelector('title[data-i18n]');
       if (titleEl) titleEl.textContent = t.meta.title;
       const descEl = document.querySelector('meta[name="description"]');
@@ -101,136 +184,24 @@ const t = content.es;
     }
   </script>
 
-  <!-- GSAP scroll-driven animations -->
-  <script>
-    import { gsap } from 'gsap';
-    import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Staggered section reveals
-    gsap.utils.toArray<HTMLElement>('.gsap-reveal').forEach((el) => {
-      gsap.from(el, {
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        },
-        y: 32,
-        opacity: 0,
-        duration: 0.65,
-        ease: 'power3.out',
-      });
-    });
-
-    // Stagger groups
-    gsap.utils.toArray<HTMLElement>('.gsap-stagger').forEach((group) => {
-      const children = group.children;
-      gsap.from(children, {
-        scrollTrigger: {
-          trigger: group,
-          start: 'top 80%',
-          toggleActions: 'play none none none',
-        },
-        y: 28,
-        opacity: 0,
-        duration: 0.55,
-        stagger: 0.1,
-        ease: 'power3.out',
-      });
-    });
-
-    // Number counter for metrics
-    document.querySelectorAll('.counter').forEach((el) => {
-      const target = parseFloat(el.getAttribute('data-target') || '0');
-      const suffix = el.getAttribute('data-suffix') || '';
-      const isDecimal = target % 1 !== 0;
-
-      ScrollTrigger.create({
-        trigger: el,
-        start: 'top 80%',
-        once: true,
-        onEnter: () => {
-          gsap.from({ val: 0 }, {
-            val: target,
-            duration: 1.8,
-            ease: 'power2.out',
-            onUpdate: function() {
-              el.textContent = (isDecimal ? this.targets()[0].val.toFixed(1) : Math.round(this.targets()[0].val)) + suffix;
-            },
-          });
-        },
-      });
-    });
-
-    // Smooth scroll with Lenis (properly proxied for ScrollTrigger)
-    import('@studio-freight/lenis').then(({ default: Lenis }) => {
-      const isTouch = matchMedia('(hover: none)').matches;
-      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      // Skip Lenis on touch devices & reduce-motion users — native scroll there is better
-      if (isTouch || reduceMotion) {
-        setupAnchorFallback();
-        ScrollTrigger.refresh();
-        return;
-      }
-
-      const lenis = new Lenis({
-        duration: 1.1,
-        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
-        wheelMultiplier: 1,
-        touchMultiplier: 1.5,
-        autoResize: true,
-      });
-
-      // ScrollTrigger proxy — make ST see Lenis as the scroller (CRITICAL)
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add((time: number) => { lenis.raf(time * 1000); });
-      gsap.ticker.lagSmoothing(0);
-
-      // Anchor link smooth scroll via Lenis
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener('click', (e) => {
-          const href = (anchor as HTMLAnchorElement).getAttribute('href');
-          if (!href || href === '#') return;
-          const target = document.querySelector(href);
-          if (target) {
-            e.preventDefault();
-            lenis.scrollTo(target as HTMLElement, { duration: 1.2, offset: -80, lock: true });
-          }
-        });
-      });
-
-      // Resize handler — keep ST in sync with viewport changes
-      const ro = new ResizeObserver(() => ScrollTrigger.refresh());
-      ro.observe(document.body);
-
-      ScrollTrigger.refresh();
-    }).catch(() => {
-      setupAnchorFallback();
-    });
-
-    function setupAnchorFallback() {
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener('click', (e) => {
-          const href = (anchor as HTMLAnchorElement).getAttribute('href');
-          if (!href || href === '#') return;
-          const target = document.querySelector(href);
-          if (target) {
-            e.preventDefault();
-            const navOffset = 80;
-            const top = (target as HTMLElement).getBoundingClientRect().top + window.scrollY - navOffset;
-            window.scrollTo({ top, behavior: 'smooth' });
-          }
-        });
-      });
-    }
-  </script>
-
-  <!-- Scroll reveal observer (fallback / initial state) -->
   <script>
     document.documentElement.classList.add('js-ready');
+    const isMobile = matchMedia('(max-width: 768px)').matches;
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener('click', (e) => {
+        const href = (anchor as HTMLAnchorElement).getAttribute('href');
+        if (!href || href === '#') return;
+        const target = document.querySelector(href);
+        if (!target) return;
+        e.preventDefault();
+        const navOffset = 80;
+        const top = (target as HTMLElement).getBoundingClientRect().top + window.scrollY - navOffset;
+        window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
+      });
+    });
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -244,7 +215,49 @@ const t = content.es;
       },
       { threshold: 0.08, rootMargin: '0px 0px -24px 0px' }
     );
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    document.querySelectorAll('.reveal, .gsap-reveal, .gsap-stagger').forEach((el) => {
+      el.classList.add('reveal');
+      observer.observe(el);
+    });
+
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target as HTMLElement;
+        const target = parseFloat(el.getAttribute('data-target') || '0');
+        const suffix = el.getAttribute('data-suffix') || '';
+        const isDecimal = target % 1 !== 0;
+        const duration = 1800;
+        const start = performance.now();
+        function tick(now: number) {
+          const t = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - t, 3);
+          const v = target * eased;
+          el.textContent = (isDecimal ? v.toFixed(1) : Math.round(v).toString()) + suffix;
+          if (t < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+        counterObserver.unobserve(el);
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.counter').forEach((el) => counterObserver.observe(el));
+
+    if (!isMobile && !reduceMotion && 'requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(() => {
+        import('@studio-freight/lenis').then(({ default: Lenis }) => {
+          const lenis = new Lenis({
+            duration: 1.1,
+            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+          });
+          function raf(time: number) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+          }
+          requestAnimationFrame(raf);
+        }).catch(() => {});
+      });
+    }
   </script>
 </body>
 </html>

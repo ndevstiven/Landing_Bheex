@@ -40,7 +40,7 @@ const chatEn = {
   <div class="chat-panel" id="chat-panel" hidden aria-label="Chat with Bheex.ai team" role="dialog" aria-modal="true">
     <div class="cp__header">
       <div class="cp__avatar">
-        <img src="/assets/logos/Bheex.Isotipo.principal.png" alt="Bheex.ai" width="28" height="28" />
+        <img src="/assets/logos/optimized/isotipo.png" alt="Bheex.ai" width="28" height="28" />
       </div>
       <div class="cp__meta">
         <p class="cp__title" data-i18n="chat.title">{chat.title}</p>
@@ -130,7 +130,7 @@ function addMessage(role, text) {
   div.className = `cm cm--${role}`;
   const safe = escapeHTML(text);
   div.innerHTML = role === 'agent'
-    ? `<div class="cm__avatar"><img src="/assets/logos/Bheex.Isotipo.principal.png" width="18" height="18" alt=""/></div><div class="cm__bubble">${safe}</div>`
+    ? `<div class="cm__avatar"><img src="/assets/logos/optimized/isotipo.png" width="18" height="18" alt=""/></div><div class="cm__bubble">${safe}</div>`
     : `<div class="cm__bubble">${safe}</div>`;
   messagesEl?.appendChild(div);
   scrollBottom();
@@ -143,7 +143,7 @@ function renderQuickReplies() {
     `<button class="qr__btn" data-intent="${q.intent}">${escapeHTML(q.q)}</button>`
   ).join('');
   wrap.innerHTML = `
-    <div class="cm__avatar"><img src="/assets/logos/Bheex.Isotipo.principal.png" width="18" height="18" alt=""/></div>
+    <div class="cm__avatar"><img src="/assets/logos/optimized/isotipo.png" width="18" height="18" alt=""/></div>
     <div class="qr__box">
       <span class="qr__title">${escapeHTML(C.quickRepliesTitle)}</span>
       <div class="qr__grid">${buttons}</div>

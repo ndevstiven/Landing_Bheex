@@ -46,7 +46,7 @@ const { demo } = t;
       <div class="demo__chat" id="demo-chat" role="tabpanel">
         <div class="chat__header">
           <div class="chat__avatar">
-            <img src="/assets/logos/Bheex.Isotipo.principal.png" alt="Bheex.ai agent" width="24" height="24" />
+            <img src="/assets/logos/optimized/isotipo.png" alt="Bheex.ai agent" width="24" height="24" />
           </div>
           <div>
             <p class="chat__name" data-i18n="chat.title">{t.chat.title}</p>
@@ -56,10 +56,10 @@ const { demo } = t;
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.96"/></svg>
           </button>
         </div>
-        <div class="chat__messages" id="chat-messages" aria-live="polite" aria-label="Chat conversation">
+        <div class="chat__messages" id="chat-messages" role="log" aria-live="polite" aria-label="Chat conversation">
           <!-- Populated by JS -->
         </div>
-        <div class="chat__typing" id="chat-typing" aria-live="polite" aria-label="Agent is typing" hidden>
+        <div class="chat__typing" id="chat-typing" role="status" aria-live="polite" aria-label="Agent is typing" hidden>
           <span></span><span></span><span></span>
         </div>
       </div>
@@ -118,7 +118,7 @@ function createBubble(role, text) {
   const div = document.createElement('div');
   div.className = `msg msg--${role}`;
   div.innerHTML = `
-    ${role === 'agent' ? '<div class="msg__avatar"><img src="/assets/logos/Bheex.Isotipo.principal.png" width="20" height="20" alt=""/></div>' : ''}
+    ${role === 'agent' ? '<div class="msg__avatar"><img src="/assets/logos/optimized/isotipo.png" width="20" height="20" alt=""/></div>' : ''}
     <div class="msg__bubble">${text}</div>
   `;
   return div;
@@ -287,19 +287,19 @@ if (section) observer.observe(section);
   border-radius: var(--r-btn);
   font-size: var(--text-small);
   font-weight: 500;
-  color: var(--c-ink-3);
+  color: var(--c-ink);
   text-align: left;
   cursor: pointer;
   transition: all 0.2s;
 }
 .scenario-btn:hover {
-  color: var(--c-warm);
-  border-color: rgba(246,112,41,0.3);
+  color: var(--c-ink);
+  border-color: var(--c-brand);
 }
 .scenario-btn.active {
-  background: rgba(246,112,41,0.08);
-  border-color: var(--c-brand);
-  color: var(--c-brand);
+  background: var(--c-ink);
+  border-color: var(--c-ink);
+  color: #FFFFFF;
 }
 .scenario-icon { color: inherit; display: flex; }
 

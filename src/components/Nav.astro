@@ -7,7 +7,10 @@ const { nav } = t;
 <header class="nav" id="nav">
   <div class="container nav__inner">
     <a href="/" class="nav__logo" aria-label="Bheex.ai inicio">
-      <img src="/assets/logos/Bheex.Logos.SinFondo.Positivo.png" alt="Bheex.ai" height="32" />
+      <picture>
+        <source srcset="/assets/logos/optimized/logo-positivo.webp" type="image/webp" />
+        <img src="/assets/logos/optimized/logo-positivo.png" alt="Bheex.ai" width="97" height="32" loading="eager" decoding="async" />
+      </picture>
     </a>
 
     <nav class="nav__links" aria-label="Navegación principal">
