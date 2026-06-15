@@ -3,10 +3,41 @@ import type { Content } from '../i18n/content';
 interface Props { t: Content }
 const { t } = Astro.props;
 const { chat } = t;
+
+// EN strings inlined so client can swap to English at runtime without fetching
+const chatEn = {
+  buttonLabel: "Talk to the team",
+  title: "Bheex.ai team",
+  subtitle: "We reply within minutes",
+  welcomeMsg: "Hi. I'm part of the Bheex.ai team. What process or system are you thinking of building? Below are the questions we get the most — or message us directly.",
+  quickRepliesTitle: "Common questions:",
+  quickReplies: [
+    { q: "How much does it cost?", intent: "cost" },
+    { q: "How long does it take?", intent: "timeline" },
+    { q: "Who owns the IP?", intent: "ip" },
+    { q: "How do we start?", intent: "start" },
+    { q: "What stack do you use?", intent: "stack" },
+    { q: "Do you handle sensitive data?", intent: "data" },
+    { q: "Post-deploy support?", intent: "support" },
+    { q: "Why not Make/Zapier?", intent: "vs" },
+  ],
+  intents: {
+    cost: "Depends on scope. Fixed-scope projects average USD 18K–60K. Monthly retainer USD 12K–28K. Technical audit is free with no commitment.",
+    timeline: "Fixed-scope: 4–8 weeks depending on integrations. Staging from day 10. Technical audit delivered in 7 days.",
+    ip: "Yours. 100%. All code, prompts, configurations, and data are yours. Deploy to your cloud if you prefer.",
+    start: "Three paths: 1) Free 30-min technical audit (most common), 2) Fixed-scope project, 3) Dedicated team on retainer. Fill the form above or write us directly.",
+    stack: "LLMs: Claude Sonnet 4.6, Opus 4.7, GPT-4o, Llama 3 / Mistral self-hosted. Backend: Node.js, Python, Go. Data: PostgreSQL, MongoDB, Redis, BigQuery. Our own orchestration with vector + relational memory.",
+    data: "Yes. We sign NDA before kickoff. Experience with financial, health, private data under GDPR/CCPA. On-prem or VPC deploy available.",
+    support: "30 days hypercare after deploy. Then: optional retainer, full handoff to your team (docs + training), or both in phases.",
+    vs: "Make/Zapier works for simple flows. For agents that orchestrate tools, hold context, and have production fallback, you need architecture. Internal build viable if you have 2+ senior AI engineers.",
+    team: "We're a team of AI engineers and devs with mission-critical production experience. We ship measured systems, not demos.",
+    cases: "Active clients in fintech (78% tickets resolved no-human), B2B SaaS (3.4x more qualified leads), omnichannel retail (40h/wk saved).",
+  },
+  fallback: "I don't have an exact answer from chat. Fastest path: book the free 30-min technical audit (top form) or write contact@bheex.ai. We reply within 24h.",
+};
 ---
-<!-- Floating chat button -->
 <div class="chat-widget" id="chat-widget">
-  <div class="chat-panel" id="chat-panel" hidden aria-label="Chat with Bheex.ai agent" role="dialog" aria-modal="true">
+  <div class="chat-panel" id="chat-panel" hidden aria-label="Chat with Bheex.ai team" role="dialog" aria-modal="true">
     <div class="cp__header">
       <div class="cp__avatar">
         <img src="/assets/logos/Bheex.Isotipo.principal.png" alt="Bheex.ai" width="28" height="28" />
@@ -22,7 +53,7 @@ const { chat } = t;
       </button>
     </div>
     <div class="cp__messages" id="cp-messages" aria-live="polite">
-      <!-- Welcome message injected by JS -->
+      <!-- Messages + quick replies injected by JS -->
     </div>
     <div class="cp__typing" id="cp-typing" hidden aria-live="polite">
       <span></span><span></span><span></span>
@@ -63,7 +94,7 @@ const { chat } = t;
   </button>
 </div>
 
-<script define:vars={{ welcomeMsg: chat.welcomeMsg, sendLabel: chat.send }}>
+<script define:vars={{ chatEs: chat, chatEn }}>
 const panel = document.getElementById('chat-panel');
 const fab = document.getElementById('chat-fab');
 const closeBtn = document.getElementById('chat-close');
@@ -74,28 +105,90 @@ const typingEl = document.getElementById('cp-typing');
 const iconOpen = fab?.querySelector('.fab__icon--open');
 const iconClose = fab?.querySelector('.fab__icon--close');
 
+// Bilingual: pick locale by browser at runtime
+const isEn = (navigator.language || 'es').toLowerCase().startsWith('en');
+const C = isEn ? chatEn : chatEs;
+
 let isOpen = false;
-let messages = [];
 let initialized = false;
 
 function scrollBottom() {
   if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
+function escapeHTML(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function addMessage(role, text) {
-  messages.push({ role, content: text });
   const div = document.createElement('div');
   div.className = `cm cm--${role}`;
+  const safe = escapeHTML(text);
   div.innerHTML = role === 'agent'
-    ? `<div class="cm__avatar"><img src="/assets/logos/Bheex.Isotipo.principal.png" width="18" height="18" alt=""/></div><div class="cm__bubble">${text}</div>`
-    : `<div class="cm__bubble">${text}</div>`;
+    ? `<div class="cm__avatar"><img src="/assets/logos/Bheex.Isotipo.principal.png" width="18" height="18" alt=""/></div><div class="cm__bubble">${safe}</div>`
+    : `<div class="cm__bubble">${safe}</div>`;
   messagesEl?.appendChild(div);
+  scrollBottom();
+}
+
+function renderQuickReplies() {
+  const wrap = document.createElement('div');
+  wrap.className = 'cm cm--agent cm--qr';
+  const buttons = C.quickReplies.map(q =>
+    `<button class="qr__btn" data-intent="${q.intent}">${escapeHTML(q.q)}</button>`
+  ).join('');
+  wrap.innerHTML = `
+    <div class="cm__avatar"><img src="/assets/logos/Bheex.Isotipo.principal.png" width="18" height="18" alt=""/></div>
+    <div class="qr__box">
+      <span class="qr__title">${escapeHTML(C.quickRepliesTitle)}</span>
+      <div class="qr__grid">${buttons}</div>
+    </div>
+  `;
+  messagesEl?.appendChild(wrap);
+  wrap.querySelectorAll('.qr__btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const intent = btn.getAttribute('data-intent');
+      const text = btn.textContent || '';
+      handleIntent(intent, text);
+    });
+  });
   scrollBottom();
 }
 
 function showTyping(show) {
   if (typingEl) typingEl.hidden = !show;
   scrollBottom();
+}
+
+function classifyIntent(text) {
+  const t = text.toLowerCase();
+  if (/(precio|cost|cuánto cuest|cuanto cuest|how much|fee|price|cobra|presupuest)/.test(t)) return 'cost';
+  if (/(tiempo|cuánto tarda|cuanto tarda|how long|timeline|plazo|semanas|delivery)/.test(t)) return 'timeline';
+  if (/(propiedad|ip\b|ownership|owns|owns the|copyright|patente)/.test(t)) return 'ip';
+  if (/(empez|start|begin|kickoff|cómo iniciar|como iniciar|first step)/.test(t)) return 'start';
+  if (/(stack|tecnolog|tech|model|claude|gpt|llama|backend|llm|tools)/.test(t)) return 'stack';
+  if (/(nda|datos sensibles|sensitive|gdpr|hipaa|ccpa|privac|complianc|on-prem|vpc)/.test(t)) return 'data';
+  if (/(soporte|support|hypercare|post deploy|post-deploy|handoff|maintenance)/.test(t)) return 'support';
+  if (/(make|zapier|n8n|workflow|automatización visual|why not|por qué no|comparison|vs)/.test(t)) return 'vs';
+  if (/(equipo|team|founders|fundador|engineers|background|quiénes son|quienes son)/.test(t)) return 'team';
+  if (/(caso|case|cliente|reference|portfolio|examples|resultados|outcome)/.test(t)) return 'cases';
+  return null;
+}
+
+function handleIntent(intent, label) {
+  addMessage('user', label || C.quickReplies.find(q => q.intent === intent)?.q || intent);
+  showTyping(true);
+  setTimeout(() => {
+    showTyping(false);
+    const answer = C.intents[intent] || C.fallback;
+    addMessage('agent', answer);
+    setTimeout(renderQuickReplies, 400);
+  }, 700 + Math.random() * 500);
 }
 
 function openChat() {
@@ -108,7 +201,10 @@ function openChat() {
 
   if (!initialized) {
     initialized = true;
-    setTimeout(() => addMessage('agent', welcomeMsg), 300);
+    setTimeout(() => {
+      addMessage('agent', C.welcomeMsg);
+      setTimeout(renderQuickReplies, 600);
+    }, 300);
   }
 }
 
@@ -123,35 +219,27 @@ function closeChat() {
 fab?.addEventListener('click', () => isOpen ? closeChat() : openChat());
 closeBtn?.addEventListener('click', closeChat);
 
-// Close on Escape
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && isOpen) closeChat();
 });
 
-// Send message
-form?.addEventListener('submit', async (e) => {
+// Submit free-text — classify intent, fall back to generic answer
+form?.addEventListener('submit', (e) => {
   e.preventDefault();
   const text = input?.value.trim();
   if (!text) return;
 
   addMessage('user', text);
   input.value = '';
-
   showTyping(true);
 
-  try {
-    const res = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: messages.slice(1) }), // skip welcome
-    });
-    const data = await res.json();
+  setTimeout(() => {
     showTyping(false);
-    addMessage('agent', data.reply || 'Something went wrong. Try again.');
-  } catch {
-    showTyping(false);
-    addMessage('agent', 'Connection error. Please try again.');
-  }
+    const intent = classifyIntent(text);
+    const answer = intent ? C.intents[intent] : C.fallback;
+    addMessage('agent', answer);
+    setTimeout(renderQuickReplies, 500);
+  }, 700 + Math.random() * 500);
 });
 </script>
 
@@ -167,12 +255,12 @@ form?.addEventListener('submit', async (e) => {
   gap: var(--sp-2);
 }
 
-/* FAB button */
+/* FAB */
 .chat-fab {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--c-brand);
+  background: var(--c-ink);
   color: var(--c-bg);
   padding: 14px 20px 14px 16px;
   border-radius: 50px;
@@ -180,13 +268,14 @@ form?.addEventListener('submit', async (e) => {
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 24px rgba(246,112,41,0.35), 0 1px 4px rgba(0,0,0,0.3);
-  transition: transform 0.2s var(--ease-out-quart), box-shadow 0.2s;
+  box-shadow: 0 4px 24px rgba(21,17,13,0.18), 0 1px 4px rgba(21,17,13,0.1);
+  transition: transform 0.2s var(--ease-out-quart), box-shadow 0.2s, background 0.2s;
   position: relative;
 }
 .chat-fab:hover {
+  background: var(--c-brand);
   transform: translateY(-2px);
-  box-shadow: 0 6px 32px rgba(246,112,41,0.5), 0 2px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 6px 32px rgba(229,95,26,0.4), 0 2px 8px rgba(21,17,13,0.15);
 }
 .fab__icon { display: flex; }
 .fab__pulse {
@@ -194,34 +283,32 @@ form?.addEventListener('submit', async (e) => {
   top: -3px; right: -3px;
   width: 12px; height: 12px;
   border-radius: 50%;
-  background: #22c55e;
+  background: #16a34a;
   border: 2px solid var(--c-bg);
   animation: fabPulse 2.5s ease-in-out infinite;
 }
 @keyframes fabPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
-  50% { box-shadow: 0 0 0 5px rgba(34,197,94,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(22,163,74,0.5); }
+  50% { box-shadow: 0 0 0 5px rgba(22,163,74,0); }
 }
 @media (prefers-reduced-motion: reduce) { .fab__pulse { animation: none; } }
 
-/* Chat panel */
+/* Panel */
 .chat-panel {
-  width: 360px;
+  width: 380px;
   max-width: calc(100vw - var(--sp-4) * 2);
   background: var(--c-surface);
-  border: 1px solid var(--c-border);
+  border: 1px solid var(--c-line-2);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 4px 16px rgba(246,112,41,0.1);
+  box-shadow: 0 20px 60px rgba(21,17,13,0.20), 0 4px 16px rgba(229,95,26,0.08);
   animation: panelIn 0.25s var(--ease-out-expo) both;
 }
 @keyframes panelIn {
   from { opacity: 0; transform: translateY(16px) scale(0.97); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
-@media (prefers-reduced-motion: reduce) {
-  .chat-panel { animation: none; }
-}
+@media (prefers-reduced-motion: reduce) { .chat-panel { animation: none; } }
 
 .cp__header {
   display: flex;
@@ -229,22 +316,22 @@ form?.addEventListener('submit', async (e) => {
   gap: var(--sp-2);
   padding: 14px var(--sp-3);
   background: var(--c-surface2);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: 1px solid var(--c-line);
 }
 .cp__avatar {
   width: 38px; height: 38px;
   border-radius: 50%;
-  background: rgba(246,112,41,0.12);
+  background: rgba(229,95,26,0.10);
   display: grid;
   place-items: center;
-  border: 1px solid rgba(246,112,41,0.25);
+  border: 1px solid rgba(229,95,26,0.22);
   flex-shrink: 0;
 }
 .cp__title {
   font-family: var(--font-display);
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--c-warm);
+  color: var(--c-ink);
 }
 .cp__sub {
   font-size: 0.6875rem;
@@ -256,13 +343,13 @@ form?.addEventListener('submit', async (e) => {
 .cp__sub .dot {
   width: 6px; height: 6px;
   border-radius: 50%;
-  background: #22c55e;
+  background: #16a34a;
   animation: dotPulse 2.2s ease-in-out infinite;
   flex-shrink: 0;
 }
 @keyframes dotPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
-  50% { box-shadow: 0 0 0 4px rgba(34,197,94,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(22,163,74,0.5); }
+  50% { box-shadow: 0 0 0 4px rgba(22,163,74,0); }
 }
 @media (prefers-reduced-motion: reduce) { .cp__sub .dot { animation: none; } }
 
@@ -271,17 +358,17 @@ form?.addEventListener('submit', async (e) => {
   width: 28px; height: 28px;
   border-radius: 4px;
   background: var(--c-surface);
-  border: 1px solid var(--c-border);
+  border: 1px solid var(--c-line-2);
   color: var(--c-muted);
   display: grid;
   place-items: center;
   cursor: pointer;
   transition: color 0.2s, border-color 0.2s;
 }
-.cp__close:hover { color: var(--c-warm); border-color: var(--c-ink-4); }
+.cp__close:hover { color: var(--c-ink); border-color: var(--c-ink-3); }
 
 .cp__messages {
-  height: 280px;
+  height: 360px;
   overflow-y: auto;
   padding: var(--sp-3);
   display: flex;
@@ -305,30 +392,75 @@ form?.addEventListener('submit', async (e) => {
 .cm__avatar {
   width: 24px; height: 24px;
   border-radius: 50%;
-  background: rgba(246,112,41,0.12);
+  background: rgba(229,95,26,0.10);
   display: grid;
   place-items: center;
   flex-shrink: 0;
   margin-top: 2px;
+  border: 1px solid rgba(229,95,26,0.18);
 }
 .cm__bubble {
   max-width: 80%;
   padding: 9px 13px;
   border-radius: 12px;
   font-size: 0.8125rem;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 .cm--agent .cm__bubble {
   background: var(--c-surface2);
-  border: 1px solid var(--c-border);
+  border: 1px solid var(--c-line);
   color: var(--c-ink);
   border-bottom-left-radius: 3px;
 }
 .cm--user .cm__bubble {
-  background: var(--c-brand);
+  background: var(--c-ink);
   color: var(--c-bg);
   font-weight: 500;
   border-bottom-right-radius: 3px;
+}
+
+/* Quick replies */
+.cm--qr .qr__box {
+  background: var(--c-surface2);
+  border: 1px solid var(--c-line);
+  border-radius: 12px;
+  border-bottom-left-radius: 3px;
+  padding: 10px 12px;
+  max-width: 92%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.qr__title {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--c-muted);
+  text-transform: uppercase;
+}
+.qr__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.qr__btn {
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--c-ink);
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.15s;
+}
+.qr__btn:hover {
+  background: var(--c-bg);
+  border-color: var(--c-brand);
+  color: var(--c-brand);
+  transform: translateX(2px);
 }
 
 .cp__typing {
@@ -336,7 +468,7 @@ form?.addEventListener('submit', async (e) => {
   align-items: center;
   gap: 4px;
   padding: 8px var(--sp-3);
-  border-top: 1px solid var(--c-border);
+  border-top: 1px solid var(--c-line);
 }
 .cp__typing span {
   width: 5px; height: 5px;
@@ -356,13 +488,13 @@ form?.addEventListener('submit', async (e) => {
   display: flex;
   gap: var(--sp-1);
   padding: var(--sp-2) var(--sp-3);
-  border-top: 1px solid var(--c-border);
+  border-top: 1px solid var(--c-line);
   background: var(--c-surface2);
 }
 .cp__input {
   flex: 1;
   background: var(--c-bg);
-  border: 1px solid var(--c-border);
+  border: 1px solid var(--c-line-2);
   border-radius: var(--r-btn);
   padding: 9px 12px;
   font-size: 0.8125rem;
@@ -376,16 +508,16 @@ form?.addEventListener('submit', async (e) => {
 
 .cp__send {
   width: 36px; height: 36px;
-  background: var(--c-brand);
+  background: var(--c-ink);
   color: var(--c-bg);
   border-radius: var(--r-btn);
   display: grid;
   place-items: center;
   cursor: pointer;
   flex-shrink: 0;
-  transition: filter 0.2s;
+  transition: background 0.2s, filter 0.2s;
 }
-.cp__send:hover { filter: brightness(1.1); }
+.cp__send:hover { background: var(--c-brand); }
 
 @media (max-width: 480px) {
   .chat-panel { width: calc(100vw - var(--sp-4) * 2); }
