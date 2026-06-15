@@ -1,44 +1,71 @@
-/* ─── Bheex.ai Design Tokens ─────────────────────────────── */
+/* ─── Bheex.ai Design Tokens — Light Theme ──────────────── */
 
-@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  /* Colors */
-  --c-brand:    #F67029;
-  --c-warm:     #FFD9AC;
-  --c-muted:    #575756;
-  --c-bg:       #0D0D0D;
-  --c-surface:  #1A1A1A;
-  --c-surface2: #222222;
-  --c-border:   rgba(87,87,86,0.4);
-  --c-ink:      #F0EBE3;
+  /* Brand colors */
+  --c-brand:    #E55F1A;          /* slightly deeper orange — readable on cream */
+  --c-brand-d:  #C44E14;          /* darker for hover */
+  --c-brand-soft: #FFF4EB;        /* faint orange tint for highlight bg */
+
+  /* Light surface palette (Anthropic / Sierra inspired) */
+  --c-bg:       #F7F4EE;          /* warm cream — main page background */
+  --c-bg-2:     #F0EBE0;          /* slightly deeper cream for section breaks */
+  --c-surface:  #FFFFFF;          /* card/panel — pure white */
+  --c-surface2: #FAF7F0;          /* elevated/subtle accent surface */
+  --c-surface3: #EFEAE0;          /* hover/active */
+
+  /* Ink scale (dark text on light bg) */
+  --c-ink:      #15110D;          /* primary headlines — near-black warm */
+  --c-ink-2:    rgba(21,17,13,0.78);   /* body text */
+  --c-ink-3:    rgba(21,17,13,0.58);   /* captions, secondary */
+  --c-ink-4:    rgba(21,17,13,0.38);   /* muted */
+  --c-muted:    #756F66;          /* labels, hairlines text */
+
+  /* Hairlines (very subtle on cream) */
+  --c-line:     rgba(21,17,13,0.08);
+  --c-line-2:   rgba(21,17,13,0.14);
+  --c-border:   rgba(21,17,13,0.12);
+  --c-brand-line: rgba(229,95,26,0.30);
+
+  /* Aliases for legacy code */
+  --c-warm:     var(--c-ink);
 
   /* Typography */
   --font-display: 'Rubik', sans-serif;
   --font-body:    'Inter', sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --text-hero:  clamp(2.75rem, 6vw, 5.25rem);
-  --text-h1:    clamp(2rem, 4vw, 3.25rem);
-  --text-h2:    clamp(1.5rem, 3vw, 2.125rem);
-  --text-h3:    clamp(1.125rem, 2vw, 1.375rem);
-  --text-body:  1rem;
-  --text-small: 0.875rem;
-  --text-label: 0.75rem;
+  /* Editorial scale */
+  --text-display: clamp(3rem, 7.5vw, 6.75rem);
+  --text-hero:    clamp(2.5rem, 5.5vw, 5rem);
+  --text-h1:      clamp(2rem, 4vw, 3rem);
+  --text-h2:      clamp(1.5rem, 2.6vw, 2rem);
+  --text-h3:      clamp(1.0625rem, 1.5vw, 1.25rem);
+  --text-lg:      1.0625rem;
+  --text-body:    0.9375rem;
+  --text-small:   0.8125rem;
+  --text-mono:    0.75rem;
+  --text-label:   0.6875rem;
 
   /* Spacing (8px grid) */
   --sp-1:  8px;
   --sp-2:  16px;
   --sp-3:  24px;
   --sp-4:  32px;
+  --sp-5:  40px;
   --sp-6:  48px;
   --sp-8:  64px;
+  --sp-10: 80px;
   --sp-12: 96px;
   --sp-16: 128px;
+  --sp-20: 160px;
 
   /* Radius */
-  --r-card:   6px;
+  --r-card:   10px;
   --r-btn:    4px;
   --r-badge:  3px;
+  --r-mono:   3px;
 
   /* Z-index scale */
   --z-dropdown: 100;
@@ -49,4 +76,10 @@
   /* Easing */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:    cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Container */
+  --container-max: 1240px;
+
+  color-scheme: light;
 }

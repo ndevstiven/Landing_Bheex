@@ -4,33 +4,50 @@ interface Props { t: Content }
 const { t } = Astro.props;
 const { results } = t;
 ---
-<section class="results" id="resultados" aria-labelledby="results-heading">
+<section class="results section" id="casos" aria-labelledby="results-heading">
   <div class="container">
-    <div class="results__header gsap-reveal">
-      <h2 id="results-heading" data-i18n="results.heading">{results.heading}</h2>
-      <p class="results__note" data-i18n="results.note">{results.note}</p>
-    </div>
+    <header class="results__header gsap-reveal">
+      <span class="section-num mono">05 / <span data-i18n="nav.cases">{t.nav.cases}</span></span>
+      <h2 id="results-heading" class="section-h" data-i18n="results.heading">{results.heading}</h2>
+      <p class="section-sub" data-i18n="results.sub">{results.sub}</p>
+    </header>
 
-    <div class="results__grid gsap-stagger">
-      {results.metrics.map((m, i) => (
-        <div class="results__item">
-          <span
-            class="results__value counter"
-            data-target={m.value}
-            data-suffix={m.suffix}
-            aria-label={`${m.value}${m.suffix} ${m.label}`}
-          >{m.value}{m.suffix}</span>
-          <span class="results__label" data-i18n={`results.metrics.${i}.label`}>{m.label}</span>
-          <div class="results__bar" aria-hidden="true"></div>
-        </div>
+    <div class="cases gsap-stagger">
+      {results.cases.map((c, i) => (
+        <article class="case">
+          <header class="case__meta">
+            <span class="mono case__index">Case · {String(i + 1).padStart(2, '0')}</span>
+            <span class="case__industry" data-i18n={`results.cases.${i}.industry`}>{c.industry}</span>
+          </header>
+
+          <div class="case__metric">
+            <span class="case__value">{c.metric}</span>
+            <span class="case__label" data-i18n={`results.cases.${i}.metricLabel`}>{c.metricLabel}</span>
+          </div>
+
+          <div class="case__detail">
+            <div class="case__row">
+              <span class="case__row-label mono">Problema</span>
+              <p class="case__row-text" data-i18n={`results.cases.${i}.problem`}>{c.problem}</p>
+            </div>
+            <div class="case__row">
+              <span class="case__row-label mono">Solución</span>
+              <p class="case__row-text" data-i18n={`results.cases.${i}.solution`}>{c.solution}</p>
+            </div>
+            <div class="case__row">
+              <span class="case__row-label mono">Métricas</span>
+              <p class="case__row-text case__row-text--brand" data-i18n={`results.cases.${i}.secondary`}>{c.secondary}</p>
+            </div>
+          </div>
+        </article>
       ))}
     </div>
 
     <blockquote class="results__quote gsap-reveal">
       <p data-i18n="results.quote">{results.quote}</p>
-      <cite>
-        <strong data-i18n="results.quoteName">{results.quoteName}</strong>
-        <span data-i18n="results.quoteTitle">{results.quoteTitle}</span>
+      <cite class="results__cite">
+        <span class="results__cite-name" data-i18n="results.quoteName">{results.quoteName}</span>
+        <span class="results__cite-title mono" data-i18n="results.quoteTitle">{results.quoteTitle}</span>
       </cite>
     </blockquote>
   </div>
@@ -38,143 +55,206 @@ const { results } = t;
 
 <style>
 .results {
-  padding-block: var(--sp-16);
   background: var(--c-bg);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Large hex watermark right */
-.results::after {
-  content: '';
-  position: absolute;
-  right: -180px; bottom: -80px;
-  width: 560px; height: 560px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 346'%3E%3Cpolygon points='150,4 296,80 296,232 150,308 4,232 4,80' fill='none' stroke='%23F67029' stroke-width='0.8' stroke-opacity='0.06'/%3E%3C/svg%3E") no-repeat center;
-  background-size: contain;
-  pointer-events: none;
+  border-top: 1px solid var(--c-line);
 }
 
 .results__header {
-  max-width: 600px;
-  margin-bottom: var(--sp-8);
-  position: relative;
-  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  max-width: 640px;
+  margin-bottom: var(--sp-10);
 }
-.results__header h2 {
-  font-size: var(--text-h1);
-  font-weight: 600;
-  color: var(--c-warm);
-  letter-spacing: -0.02em;
-  margin-bottom: var(--sp-2);
+.section-num {
+  color: var(--c-brand);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: var(--text-label);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
-.results__note {
-  font-size: var(--text-small);
-  color: var(--c-muted);
+.section-num::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: var(--c-brand);
 }
 
-.results__grid {
+.cases {
+  display: flex;
+  flex-direction: column;
+}
+
+.case {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2px;
-  margin-bottom: var(--sp-8);
-  position: relative;
-  z-index: 1;
+  grid-template-columns: 0.7fr 0.6fr 1.5fr;
+  gap: var(--sp-6);
+  padding: var(--sp-8) 0;
+  border-bottom: 1px solid var(--c-line);
+  align-items: start;
+  transition: background 0.3s var(--ease-out-quart);
 }
+.case:first-child { border-top: 1px solid var(--c-line); }
+.case:hover { background: linear-gradient(to right, rgba(246,112,41,0.025), transparent 60%); }
 
-.results__item {
-  padding: var(--sp-6) var(--sp-4);
-  background: var(--c-surface);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-card);
+.case__meta {
   display: flex;
   flex-direction: column;
   gap: var(--sp-1);
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.2s, transform 0.2s;
 }
-.results__item:hover {
-  border-color: rgba(246,112,41,0.35);
-  transform: translateY(-3px);
+.case__index {
+  color: var(--c-brand);
+  font-size: var(--text-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.case__industry {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--c-warm);
+  letter-spacing: -0.022em;
+  line-height: 1.2;
 }
 
-.results__value {
+.case__metric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: var(--sp-4);
+  border-left: 1px solid var(--c-line);
+}
+.case__value {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-  font-weight: 700;
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 600;
   color: var(--c-brand);
-  letter-spacing: -0.04em;
-  line-height: 1;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  font-feature-settings: 'tnum';
 }
-.results__label {
+.case__label {
+  font-family: var(--font-body);
   font-size: var(--text-small);
-  color: rgba(240,235,227,0.62);
-  line-height: 1.45;
+  color: var(--c-ink-3);
+  line-height: 1.4;
   max-width: 22ch;
+  margin-top: 4px;
 }
-.results__bar {
-  position: absolute;
-  bottom: 0; left: 0;
-  height: 2px;
-  width: 0;
-  background: var(--c-brand);
-  transition: width 0.6s var(--ease-out-quart);
+
+.case__detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding-left: var(--sp-4);
+  border-left: 1px solid var(--c-line);
 }
-.results__item:hover .results__bar { width: 100%; }
+.case__row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: var(--sp-3);
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--c-line);
+}
+.case__row:last-child { border-bottom: 0; padding-bottom: 0; }
+
+.case__row-label {
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  padding-top: 3px;
+}
+.case__row-text {
+  font-size: var(--text-small);
+  color: var(--c-ink-2);
+  line-height: 1.6;
+}
+.case__row-text--brand {
+  color: var(--c-brand);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0;
+}
 
 /* Testimonial */
 .results__quote {
+  margin-top: var(--sp-10);
+  padding: var(--sp-8) var(--sp-6);
   background: var(--c-surface);
-  border: 1px solid var(--c-border);
-  border-left: 3px solid var(--c-brand);
+  border: 1px solid var(--c-line);
   border-radius: var(--r-card);
-  padding: var(--sp-6);
   display: flex;
   flex-direction: column;
   gap: var(--sp-4);
   position: relative;
-  z-index: 1;
+  overflow: hidden;
 }
 .results__quote::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--c-brand);
+}
+.results__quote::after {
   content: '"';
   position: absolute;
-  top: var(--sp-3); right: var(--sp-4);
+  top: 12px; right: 24px;
   font-family: var(--font-display);
-  font-size: 5rem;
+  font-size: 8rem;
   font-weight: 700;
   color: var(--c-brand);
-  opacity: 0.12;
+  opacity: 0.06;
   line-height: 1;
 }
 
 .results__quote p {
   font-family: var(--font-display);
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-size: clamp(1.125rem, 1.8vw, 1.625rem);
   font-weight: 400;
   color: var(--c-warm);
-  line-height: 1.65;
-  max-width: 80ch;
+  line-height: 1.45;
+  letter-spacing: -0.018em;
+  max-width: 82ch;
 }
-.results__quote cite {
+.results__cite {
   font-style: normal;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-.results__quote strong {
+.results__cite-name {
   font-family: var(--font-display);
   font-weight: 600;
-  color: var(--c-brand);
+  color: var(--c-warm);
   font-size: var(--text-small);
 }
-.results__quote span {
-  font-size: var(--text-small);
+.results__cite-title {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
   color: var(--c-muted);
+  text-transform: uppercase;
 }
 
-@media (max-width: 640px) {
-  .results__grid { grid-template-columns: 1fr; }
+@media (max-width: 980px) {
+  .case {
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+  .case__metric, .case__detail {
+    padding-left: 0;
+    border-left: 0;
+    padding-top: var(--sp-2);
+    border-top: 1px solid var(--c-line);
+  }
+}
+@media (max-width: 560px) {
+  .case__row { grid-template-columns: 1fr; gap: 4px; }
   .results__quote { padding: var(--sp-4); }
 }
 </style>

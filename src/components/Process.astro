@@ -1,0 +1,186 @@
+---
+import type { Content } from '../i18n/content';
+interface Props { t: Content }
+const { t } = Astro.props;
+const { process } = t;
+---
+<section class="proc section" id="proceso" aria-labelledby="proc-heading">
+  <div class="container">
+    <header class="proc__header gsap-reveal">
+      <span class="section-num mono">04 / <span data-i18n="nav.process">{t.nav.process}</span></span>
+      <h2 id="proc-heading" class="section-h" data-i18n="process.heading">{process.heading}</h2>
+      <p class="section-sub" data-i18n="process.sub">{process.sub}</p>
+    </header>
+
+    <ol class="proc__steps gsap-stagger">
+      {process.steps.map((step, i) => (
+        <li class="proc__step">
+          <div class="proc__num-col">
+            <span class="proc__num">{step.num}</span>
+            <span class="proc__duration mono" data-i18n={`process.steps.${i}.duration`}>{step.duration}</span>
+          </div>
+          <div class="proc__content">
+            <h3 class="proc__title" data-i18n={`process.steps.${i}.title`}>{step.title}</h3>
+            <p class="proc__body" data-i18n={`process.steps.${i}.body`}>{step.body}</p>
+            <ul class="proc__tags" role="list">
+              {step.tags.map((tag, ti) => (
+                <li class="mono-chip" data-i18n={`process.steps.${i}.tags.${ti}`}>{tag}</li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+.proc { background: var(--c-bg); border-top: 1px solid var(--c-line); }
+
+.proc__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  max-width: 640px;
+  margin-bottom: var(--sp-10);
+}
+.section-num {
+  color: var(--c-brand);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: var(--text-label);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-num::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: var(--c-brand);
+}
+
+/* Vertical timeline editorial */
+.proc__steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Vertical line */
+.proc__steps::before {
+  content: '';
+  position: absolute;
+  left: 21px;
+  top: 22px;
+  bottom: 22px;
+  width: 1px;
+  background: linear-gradient(to bottom,
+    var(--c-brand) 0%,
+    var(--c-brand-line) 50%,
+    var(--c-brand) 100%);
+  opacity: 0.3;
+}
+
+.proc__step {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: var(--sp-6);
+  padding: var(--sp-6) 0;
+  border-bottom: 1px solid var(--c-line);
+  position: relative;
+  transition: background 0.3s var(--ease-out-quart);
+}
+.proc__step:last-child { border-bottom: 0; }
+.proc__step:hover { background: linear-gradient(to right, rgba(246,112,41,0.025), transparent 50%); }
+
+.proc__num-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  position: relative;
+}
+
+.proc__num {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 4vw, 3rem);
+  font-weight: 600;
+  color: var(--c-brand);
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  position: relative;
+  padding-left: 60px;
+}
+.proc__num::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--c-brand);
+  background: var(--c-bg);
+  z-index: 1;
+}
+.proc__num::after {
+  content: '';
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background: var(--c-brand);
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.proc__duration {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--c-muted);
+  padding-left: 60px;
+}
+
+.proc__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.proc__title {
+  font-size: clamp(1.375rem, 2.2vw, 1.75rem);
+  font-weight: 600;
+  color: var(--c-warm);
+  letter-spacing: -0.022em;
+  line-height: 1.15;
+}
+.proc__body {
+  font-size: var(--text-body);
+  color: var(--c-ink-2);
+  line-height: 1.65;
+  max-width: 56ch;
+}
+.proc__tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--sp-1);
+}
+
+@media (max-width: 768px) {
+  .proc__steps::before { display: none; }
+  .proc__step {
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+  .proc__num { padding-left: 0; }
+  .proc__num::before, .proc__num::after { display: none; }
+  .proc__duration { padding-left: 0; }
+}
+</style>

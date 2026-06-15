@@ -1,0 +1,43 @@
+# Build output
+dist/
+.astro/
+
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.production
+.env.local
+
+# Logs
+*.log
+.npm
+.pnpm-debug.log*
+
+# macOS
+.DS_Store
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Local Claude settings
+.claude/settings.local.json
+.claude/settings.json
+.claude/skills/
+.agents/
+
+# Test / QA screenshots
+*.png
+!public/**/*.png
+!identidad_visual/**/*.png
+!.claude/skills/**/*.png
+
+# Astro session storage
+.session-storage/
+
+# Playwright
+.playwright-mcp/
+playwright-report/
+test-results/

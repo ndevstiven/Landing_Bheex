@@ -4,37 +4,54 @@ interface Props { t: Content }
 const { t } = Astro.props;
 const { cta } = t;
 ---
-<section class="cta-section" id="contacto" aria-labelledby="cta-heading">
-  <div class="corner-accent top-right" aria-hidden="true"></div>
-  <div class="corner-accent bottom-left" aria-hidden="true"></div>
-  <div class="cta__hex-deco" aria-hidden="true">
-    <svg viewBox="0 0 400 460" fill="none">
-      <polygon points="200,6 394,106 394,306 200,406 6,306 6,106" stroke="#F67029" stroke-width="1.5" stroke-opacity="0.15"/>
-      <polygon points="200,40 360,120 360,280 200,360 40,280 40,120" stroke="#F67029" stroke-width="0.8" stroke-opacity="0.08"/>
-    </svg>
-  </div>
+<section class="ctas section" id="contacto" aria-labelledby="cta-heading">
+  <div class="container ctas__inner">
+    <div class="ctas__copy gsap-reveal">
+      <span class="section-num mono">08 / <span data-i18n="nav.contact">{t.nav.contact}</span></span>
+      <h2 id="cta-heading" class="ctas__h" data-i18n="cta.heading">{cta.heading}</h2>
+      <p class="ctas__sub" data-i18n="cta.sub">{cta.sub}</p>
 
-  <div class="container cta__inner">
-    <div class="cta__copy gsap-reveal">
-      <h2 id="cta-heading" data-i18n="cta.heading">{cta.heading}</h2>
-      <p class="cta__sub" data-i18n="cta.sub">{cta.sub}</p>
+      <ul class="ctas__bullets" aria-label="What you get">
+        {cta.bullets.map((b, i) => (
+          <li data-i18n={`cta.bullets.${i}`}>
+            <span class="ctas__bullet-dot" aria-hidden="true"></span>
+            <span>{b}</span>
+          </li>
+        ))}
+      </ul>
     </div>
 
-    <form class="cta__form gsap-reveal" style="--delay: 120ms" novalidate aria-label="Contact form" id="cta-form">
-      <div class="form__row">
-        <div class="form__field">
-          <label for="cta-name" data-i18n="cta.labelName">{cta.labelName}</label>
-          <input type="text" id="cta-name" name="name" placeholder={cta.placeholderName} required autocomplete="name"
-            data-i18n-placeholder="cta.placeholderName" />
-        </div>
-        <div class="form__field">
-          <label for="cta-email" data-i18n="cta.labelEmail">{cta.labelEmail}</label>
-          <input type="email" id="cta-email" name="email" placeholder={cta.placeholderEmail} required autocomplete="email"
-            data-i18n-placeholder="cta.placeholderEmail" />
-        </div>
+    <form class="ctas__form gsap-reveal" style="--delay: 120ms" novalidate aria-label="Audit form" id="cta-form">
+      <div class="form__head">
+        <span class="mono form__head-tag">/ audit-request.form</span>
+        <span class="form__head-status mono">
+          <span class="form__head-dot"></span>OPEN
+        </span>
       </div>
+
       <div class="form__field">
-        <label for="cta-usecase" data-i18n="cta.labelUsecase">{cta.labelUsecase}</label>
+        <label for="cta-name">
+          <span class="mono">01</span>
+          <span data-i18n="cta.labelName">{cta.labelName}</span>
+        </label>
+        <input type="text" id="cta-name" name="name" placeholder={cta.placeholderName} required autocomplete="name"
+          data-i18n-placeholder="cta.placeholderName" />
+      </div>
+
+      <div class="form__field">
+        <label for="cta-email">
+          <span class="mono">02</span>
+          <span data-i18n="cta.labelEmail">{cta.labelEmail}</span>
+        </label>
+        <input type="email" id="cta-email" name="email" placeholder={cta.placeholderEmail} required autocomplete="email"
+          data-i18n-placeholder="cta.placeholderEmail" />
+      </div>
+
+      <div class="form__field">
+        <label for="cta-usecase">
+          <span class="mono">03</span>
+          <span data-i18n="cta.labelUsecase">{cta.labelUsecase}</span>
+        </label>
         <select id="cta-usecase" name="usecase" required>
           <option value="" disabled selected data-i18n="cta.selectDefault">{cta.selectDefault}</option>
           {cta.options.map((o, i) => (
@@ -42,158 +59,224 @@ const { cta } = t;
           ))}
         </select>
       </div>
+
       <button type="submit" class="btn btn--primary form__submit" data-i18n="cta.submitLabel">
         {cta.submitLabel}
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
           <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
         </svg>
       </button>
-      <p class="form__note" data-i18n="cta.submitNote">{cta.submitNote}</p>
+      <p class="form__note mono" data-i18n="cta.submitNote">{cta.submitNote}</p>
     </form>
   </div>
 </section>
 
 <style>
-.cta-section {
-  padding-block: var(--sp-16);
-  background: var(--c-surface);
-  border-top: 1px solid var(--c-border);
+.ctas {
+  background: var(--c-bg);
+  border-top: 1px solid var(--c-line);
   position: relative;
   overflow: hidden;
 }
-.cta__hex-deco {
+.ctas::before {
+  content: '';
   position: absolute;
-  right: -100px; top: 50%;
-  transform: translateY(-50%);
-  width: 380px; height: 440px;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='138' viewBox='0 0 120 138'%3E%3Cpolygon points='60,2 118,32 118,92 60,122 2,92 2,32' fill='none' stroke='%23F67029' stroke-width='0.5' stroke-opacity='0.03'/%3E%3C/svg%3E");
+  background-size: 120px 138px;
+  mask-image: radial-gradient(ellipse 70% 50% at 80% 50%, black, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 50% at 80% 50%, black, transparent 80%);
   pointer-events: none;
-  opacity: 0.6;
 }
 
-.corner-accent {
-  position: absolute;
-  background: var(--c-brand);
-}
-.corner-accent.top-right {
-  top: 0; right: 0;
-  width: 120px; height: 4px;
-}
-.corner-accent.top-right::after {
-  content: '';
-  position: absolute;
-  right: 0; top: 0;
-  width: 4px; height: 120px;
-  background: var(--c-brand);
-}
-.corner-accent.bottom-left {
-  bottom: 0; left: 0;
-  width: 120px; height: 4px;
-}
-.corner-accent.bottom-left::after {
-  content: '';
-  position: absolute;
-  left: 0; bottom: 0;
-  width: 4px; height: 120px;
-  background: var(--c-brand);
-}
-
-.cta__inner {
+.ctas__inner {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--sp-12);
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--sp-8);
   align-items: center;
   position: relative;
   z-index: 1;
 }
 
-.cta__copy {
+.ctas__copy {
   display: flex;
   flex-direction: column;
   gap: var(--sp-3);
 }
-.cta__copy h2 {
-  font-size: var(--text-h1);
+.section-num {
+  color: var(--c-brand);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: var(--text-label);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-num::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: var(--c-brand);
+}
+.ctas__h {
+  font-size: clamp(2rem, 4.6vw, 3.75rem);
   font-weight: 600;
   color: var(--c-warm);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.028em;
+  line-height: 1.0;
+  max-width: 16ch;
 }
-.cta__sub {
-  color: rgba(240,235,227,0.65);
-  font-size: clamp(0.9375rem, 1.4vw, 1.0625rem);
-  line-height: 1.65;
+.ctas__sub {
+  color: var(--c-ink-2);
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  max-width: 52ch;
+  margin-top: var(--sp-1);
 }
 
-.cta__form {
+.ctas__bullets {
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
+  gap: 10px;
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--c-line);
+  margin-top: var(--sp-2);
 }
-.form__row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--sp-2);
+.ctas__bullets li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-small);
+  color: var(--c-ink);
+  font-weight: 500;
 }
+.ctas__bullet-dot {
+  flex-shrink: 0;
+  width: 6px; height: 6px;
+  background: var(--c-brand);
+  border-radius: 1px;
+}
+
+/* Form — editorial code-like */
+.ctas__form {
+  background: var(--c-surface);
+  border: 1px solid var(--c-line-2);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  position: relative;
+}
+.ctas__form::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 12%; right: 12%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--c-brand), transparent);
+}
+
+.form__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px var(--sp-3);
+  border-bottom: 1px solid var(--c-line);
+  background: rgba(255,255,255,0.015);
+}
+.form__head-tag {
+  font-size: 0.6875rem;
+  color: var(--c-ink-3);
+  letter-spacing: 0;
+}
+.form__head-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.625rem;
+  color: #22c55e;
+  letter-spacing: 0.1em;
+}
+.form__head-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+}
+
 .form__field {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  padding: var(--sp-2) var(--sp-3);
+  border-bottom: 1px solid var(--c-line);
 }
 .form__field label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
   font-size: var(--text-small);
   font-weight: 500;
-  color: rgba(240,235,227,0.72);
+  color: var(--c-ink-2);
+}
+.form__field label .mono {
+  font-family: var(--font-mono);
+  color: var(--c-brand);
+  font-size: 0.6875rem;
+  letter-spacing: 0;
 }
 .form__field input,
 .form__field select {
-  background: var(--c-bg);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-btn);
-  padding: 12px 14px;
-  font-size: var(--text-small);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 6px 0;
+  font-size: var(--text-body);
   font-family: var(--font-body);
-  color: var(--c-ink);
+  color: var(--c-warm);
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: color 0.2s;
   width: 100%;
   -webkit-appearance: none;
 }
-.form__field input::placeholder { color: rgba(87,87,86,0.8); }
+.form__field input::placeholder { color: var(--c-ink-4); }
 .form__field input:focus,
 .form__field select:focus {
-  border-color: var(--c-brand);
-  box-shadow: 0 0 0 3px rgba(246,112,41,0.12);
+  color: var(--c-warm);
+}
+.form__field:focus-within {
+  background: rgba(246,112,41,0.03);
+  border-bottom-color: var(--c-brand);
 }
 .form__field select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23575756' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23F67029' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 36px;
+  background-position: right 0 center;
+  padding-right: 24px;
   cursor: pointer;
 }
 .form__field select option {
   background: var(--c-surface);
-  color: var(--c-ink);
-}
-.form__submit {
-  width: 100%;
-  justify-content: center;
-  padding: 14px;
-  font-size: 1rem;
-  margin-top: var(--sp-1);
-}
-.form__note {
-  font-size: 0.75rem;
-  color: var(--c-muted);
-  text-align: center;
-  max-width: 100%;
+  color: var(--c-warm);
 }
 
-@media (max-width: 900px) {
-  .cta__inner { grid-template-columns: 1fr; gap: var(--sp-8); }
-  .cta__hex-deco { display: none; }
+.form__submit {
+  width: calc(100% - var(--sp-6));
+  margin: var(--sp-3) var(--sp-3) 0;
+  justify-content: center;
+  padding: 14px;
+  font-size: 0.9375rem;
+  font-weight: 500;
 }
-@media (max-width: 560px) {
-  .form__row { grid-template-columns: 1fr; }
+.form__note {
+  font-size: 0.625rem;
+  color: var(--c-muted);
+  text-align: center;
+  padding: var(--sp-2) var(--sp-3) var(--sp-3);
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 980px) {
+  .ctas__inner { grid-template-columns: 1fr; gap: var(--sp-6); }
 }
 </style>
 
@@ -203,9 +286,9 @@ form?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const btn = form.querySelector('.form__submit') as HTMLButtonElement;
   btn.disabled = true;
-  btn.textContent = '...';
-  await new Promise(r => setTimeout(r, 1000));
-  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Demo solicitada`;
+  btn.innerHTML = '...';
+  await new Promise(r => setTimeout(r, 900));
+  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Recibido`;
   btn.style.background = '#22c55e';
   btn.style.color = '#fff';
 });

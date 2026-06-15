@@ -2,10 +2,13 @@
 import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
 import LogoCarousel from '../components/LogoCarousel.astro';
-import Agents from '../components/Agents.astro';
+import Capabilities from '../components/Capabilities.astro';
 import AgentDemo from '../components/AgentDemo.astro';
-import HowItWorks from '../components/HowItWorks.astro';
+import Services from '../components/Services.astro';
+import Process from '../components/Process.astro';
 import Results from '../components/Results.astro';
+import Stack from '../components/Stack.astro';
+import FAQ from '../components/FAQ.astro';
 import CTA from '../components/CTA.astro';
 import ChatWidget from '../components/ChatWidget.astro';
 import Footer from '../components/Footer.astro';
@@ -41,10 +44,13 @@ const t = content.es;
   <main id="main">
     <Hero t={t} />
     <LogoCarousel t={t} />
-    <Agents t={t} />
+    <Capabilities t={t} />
     <AgentDemo t={t} />
-    <HowItWorks t={t} />
+    <Services t={t} />
+    <Process t={t} />
     <Results t={t} />
+    <Stack t={t} />
+    <FAQ t={t} />
     <CTA t={t} />
   </main>
   <Footer t={t} />
@@ -157,22 +163,33 @@ const t = content.es;
       });
     });
 
-    // Smooth scroll with Lenis
+    // Smooth scroll with Lenis (properly proxied for ScrollTrigger)
     import('@studio-freight/lenis').then(({ default: Lenis }) => {
+      const isTouch = matchMedia('(hover: none)').matches;
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Skip Lenis on touch devices & reduce-motion users — native scroll there is better
+      if (isTouch || reduceMotion) {
+        setupAnchorFallback();
+        ScrollTrigger.refresh();
+        return;
+      }
+
       const lenis = new Lenis({
-        duration: 1.2,
+        duration: 1.1,
         easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 1.5,
+        autoResize: true,
       });
 
-      // Use ONLY the gsap ticker — do NOT also run a separate requestAnimationFrame loop
+      // ScrollTrigger proxy — make ST see Lenis as the scroller (CRITICAL)
+      lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add((time: number) => { lenis.raf(time * 1000); });
       gsap.ticker.lagSmoothing(0);
 
-      // Keep ScrollTrigger in sync with Lenis scroll position
-      lenis.on('scroll', () => ScrollTrigger.update());
-
-      // Intercept all anchor links so Lenis handles them smoothly
+      // Anchor link smooth scroll via Lenis
       document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
         anchor.addEventListener('click', (e) => {
           const href = (anchor as HTMLAnchorElement).getAttribute('href');
@@ -180,15 +197,21 @@ const t = content.es;
           const target = document.querySelector(href);
           if (target) {
             e.preventDefault();
-            lenis.scrollTo(target as HTMLElement, { duration: 1.3, offset: -72 });
+            lenis.scrollTo(target as HTMLElement, { duration: 1.2, offset: -80, lock: true });
           }
         });
       });
 
-      // Refresh ScrollTrigger after Lenis is set up
+      // Resize handler — keep ST in sync with viewport changes
+      const ro = new ResizeObserver(() => ScrollTrigger.refresh());
+      ro.observe(document.body);
+
       ScrollTrigger.refresh();
     }).catch(() => {
-      // Fallback: native smooth scroll if Lenis fails
+      setupAnchorFallback();
+    });
+
+    function setupAnchorFallback() {
       document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
         anchor.addEventListener('click', (e) => {
           const href = (anchor as HTMLAnchorElement).getAttribute('href');
@@ -196,11 +219,13 @@ const t = content.es;
           const target = document.querySelector(href);
           if (target) {
             e.preventDefault();
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const navOffset = 80;
+            const top = (target as HTMLElement).getBoundingClientRect().top + window.scrollY - navOffset;
+            window.scrollTo({ top, behavior: 'smooth' });
           }
         });
       });
-    });
+    }
   </script>
 
   <!-- Scroll reveal observer (fallback / initial state) -->
